@@ -776,6 +776,10 @@ if(S.scr=='driver'&&isDrv()&&S.job&&S.job.real&&!document.getElementById('ocd30'
 const _rd30=render;render=function(){_rd30();oc30()};
 setInterval(async()=>{try{if(S.scr=='chat'&&SV()&&ctxOf(S.ck)&&!document.hidden){const ch=await loadThread();if(ch){render();const e=$('#scr');if(e)e.scrollTop=e.scrollHeight}}}catch(e){}},4000);
 
+/* add31: retrait de la discussion support et de la boîte de messages du tableau commerçant */
+function cl31(){try{if(S.scr!='merchant')return;const sc=$('#scr');if(!sc)return;const i=sc.querySelector('#inb');if(i)i.remove();sc.querySelectorAll('button').forEach(b=>{const o=b.getAttribute('onclick')||'';if(/openChat\('sup'|openInbox/.test(o))b.remove()})}catch(e){}}
+const _rd31=render;render=function(){_rd31();cl31();setTimeout(cl31,400)};
+
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
