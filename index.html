@@ -738,6 +738,12 @@ async function doLogout24(){if(!confirm('تسجيل الخروج من حسابك
 const _dl24=drvLogout;drvLogout=function(){if(!(API.on()&&API.ses))return _dl24();if(S.job){toast('أنهِ الطلب الحالي أولا');return}doLogout24()};
 const _go24=go;go=function(s,x){if(s=='roles'&&API.on()&&API.ses&&['merchant','driver','admin'].includes(S.scr)){doLogout24();return}return _go24(s,x)};
 try{const A=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App;if(A&&A.addListener)A.addListener('backButton',()=>{const dr=$('#dr');if(dr&&dr.className=='o'){drawer(0);return}const b=document.querySelector('#scr .top button.ib[onclick^="go("]');if(b&&!['home','merchant','driver','admin','roles'].includes(S.scr)){b.click();return}if(A.minimizeApp)A.minimizeApp();else if(A.exitApp)A.exitApp()})}catch(e){}
+/* add25: tableau commerçant épuré */
+function clean25(h){try{let i=h.indexOf('<div style="padding:12px 20px 0"><button class="btn" style="height:56px');if(i>=0){const j=h.indexOf('</button></div>',i);if(j>i)h=h.slice(0,i)+h.slice(j+15)}
+i=h.indexOf('<div style="padding:0 20px 18px"><button class="btn o sm" style="height:46px" onclick="openIdeas()">');if(i>=0){const j=h.indexOf('</div>',i);if(j>i)h=h.slice(0,i)+h.slice(j+6)}
+h=h.replace(/<button class="btn" onclick="go\('addp'\)">(<svg[\s\S]*?<\/svg>)(?:&nbsp;|\s)*إضافة منتج<\/button>/,'<button class="btn" style="position:relative;justify-content:center;text-align:center" onclick="go(\'addp\')"><span style="position:absolute;inset-inline-start:18px;top:50%;transform:translateY(-50%);display:flex">$1</span>إضافة منتج</button>')}catch(e){}return h}
+const _m25=V.merchant;V.merchant=()=>clean25(_m25());
+const _rd25=render;render=function(){_rd25();try{if(S.scr=='merchant'){const sc=$('#scr');sc&&sc.querySelectorAll('button').forEach(b=>{const o=b.getAttribute('onclick')||'';if(/mpromo|nx\('rev'\)|regst|openIdeas/.test(o)){const d=b.closest('div[style*="padding:0 20px 18px"]');(d&&d!==sc?d:b).remove()}})}}catch(e){}};
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
