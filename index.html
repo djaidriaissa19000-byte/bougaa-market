@@ -757,6 +757,9 @@ h=h.replace(/<div class="card" style="padding:12px 6px;text-align:center">(<b[^>
 h=h.replace('<div style="padding:16px 20px 4px;font-weight:900;font-size:17px">الطلبات الواردة</div>','<div id="ords26" style="padding:16px 20px 4px;font-weight:900;font-size:17px">الطلبات الواردة</div>')}catch(e){}return h};
 const _rd26=render;render=function(){_rd26();try{let b=document.getElementById('mv26');if(S.mv26&&S.scr!='merchant'&&S.role=='merchant'){if(!b){b=document.createElement('button');b.id='mv26';b.className='btn';b.style.cssText='position:fixed;bottom:84px;left:50%;transform:translateX(-50%);width:auto;padding:0 22px;height:44px;z-index:60;box-shadow:0 4px 14px rgba(8,58,140,.35)';b.textContent='العودة إلى لوحة التاجر';b.onclick=()=>{S.mv26=0;go('merchant')};document.body.appendChild(b)}}else{if(b)b.remove();if(S.scr=='merchant')S.mv26=0}}catch(e){}};
 
+/* add27: interrupteur livraison du formulaire d'inscription commerçant */
+const _rg27=V.regm;V.regm=()=>{let h=_rg27();try{const t='أوفّر خدمة التوصيل',i=h.indexOf(t),j=i<0?-1:h.indexOf(sw,i);if(j>=0)h=h.slice(0,j)+sw26('sdel')+h.slice(j+sw.length)}catch(e){}return h};
+
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
