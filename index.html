@@ -766,6 +766,16 @@ const _m28=V.merchant;V.merchant=()=>{let h=_m28();try{const P='<div style="padd
 /* add29: espace après le waw */
 const _m29=V.merchant;V.merchant=()=>_m29().replace('تصفّح المتاجر والسلع','تصفّح المتاجر و السلع');
 
+/* add30: discussion en direct entre commerçant, client et livreur */
+loadThread=async function(){const c=ctxOf(S.ck);if(!c)return false;const me=API.ses.uid;let q='/rest/v1/messages?select=id,sender_id,recipient_id,body&'+(c.t=='o'?'order_id':'listing_id')+'=eq.'+c.id;if(c.t=='o'&&S.cr)q+='&or=(and(sender_id.eq.'+me+',recipient_id.eq.'+S.cr+'),and(sender_id.eq.'+S.cr+',recipient_id.eq.'+me+'))';q+='&order=created_at.asc&limit=200';const rows=await req(q);const h=rows.length+':'+(rows.length?rows[rows.length-1].id:0);S.cth=S.cth||{};const k=S.ck+'|'+S.cr,ch=S.cth[k]!==h;S.cth[k]=h;S.ch[S.ck]=rows.map(r=>({m:r.sender_id==me?'me':'th',t:r.body}));return ch};
+async function openOC(sid,rec,name,w){if(!SV()||!rec){toast('الطرف الآخر غير متاح بعد');return}S.hb=S.scr;S.ck='o:'+sid;S.cr=rec;S.cn=name;S.cw=w;try{await loadThread();go('chat')}catch(e){toast(errAr(e))}}
+const _vc30=V.chat;V.chat=()=>{let h=_vc30();const R={c:[['أريد تغيير الطلب','طلبك قيد التحضير'],['كم يتأخر؟','طلبك جاهز'],['شكرا','شكرا لك']],dr:[['أريد تغيير الطلب','أنا في الطريق'],['كم يتأخر؟','وصلت'],['شكرا','أين العنوان بالضبط؟']]}[S.cw];if(R)R.forEach(([a,b])=>{h=h.split(a).join(b)});return h};
+function oc30(){try{if(!SV())return;const sc=$('#scr');if(!sc)return;const bt=(o,r,n,w,t)=>'<button class="btn o sm" style="flex:1;height:38px" onclick="openOC(\''+o+'\',\''+(r||'')+'\',\''+n+'\',\''+w+'\')">'+t+'</button>';
+if(S.scr=='merchant'&&S.me.role=='merchant')sc.querySelectorAll('.card').forEach(c=>{if(c.dataset.oc)return;const b=c.querySelector('b'),m=b&&/^طلب\s*#\s*(\d+)/.exec(b.textContent.trim());if(!m)return;const o=S.orders.find(x=>x.id==+m[1]&&x.sid);if(!o)return;c.dataset.oc=1;c.insertAdjacentHTML('beforeend','<div class="row" style="gap:8px;margin-top:8px">'+bt(o.sid,o.cid,'الزبون · طلب #'+o.id,'c','راسل الزبون')+(o.drvId?bt(o.sid,o.drvId,'الموصل · طلب #'+o.id,'c','راسل الموصل'):'')+'</div>')});
+if(S.scr=='driver'&&isDrv()&&S.job&&S.job.real&&!document.getElementById('ocd30')){const o=S.orders.find(x=>x.id==S.job.real);if(o&&o.sid){const st=STORES.find(s=>s.sid==o.store);sc.insertAdjacentHTML('beforeend','<div id="ocd30" class="row" style="gap:8px;padding:0 20px 16px">'+bt(o.sid,o.cid,'الزبون · طلب #'+o.id,'dr','راسل الزبون')+bt(o.sid,st&&st.own,'التاجر · طلب #'+o.id,'dr','راسل التاجر')+'</div>')}}}catch(e){}}
+const _rd30=render;render=function(){_rd30();oc30()};
+setInterval(async()=>{try{if(S.scr=='chat'&&SV()&&ctxOf(S.ck)&&!document.hidden){const ch=await loadThread();if(ch){render();const e=$('#scr');if(e)e.scrollTop=e.scrollHeight}}}catch(e){}},4000);
+
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
