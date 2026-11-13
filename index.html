@@ -780,6 +780,9 @@ setInterval(async()=>{try{if(S.scr=='chat'&&SV()&&ctxOf(S.ck)&&!document.hidden)
 function cl31(){try{if(S.scr!='merchant')return;const sc=$('#scr');if(!sc)return;const i=sc.querySelector('#inb');if(i)i.remove();sc.querySelectorAll('button').forEach(b=>{const o=b.getAttribute('onclick')||'';if(/openChat\('sup'|openInbox/.test(o))b.remove()})}catch(e){}}
 const _rd31=render;render=function(){_rd31();cl31();setTimeout(cl31,400)};
 
+/* add32: la boîte de messages reste, seule la discussion support est retirée */
+cl31=function(){try{if(S.scr!='merchant')return;const sc=$('#scr');if(!sc)return;sc.querySelectorAll('button').forEach(b=>{if(/openChat\('sup'/.test(b.getAttribute('onclick')||''))b.remove()})}catch(e){}};
+
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
