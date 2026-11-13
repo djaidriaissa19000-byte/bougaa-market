@@ -725,6 +725,8 @@ if(!b){b=document.createElement('div');b.id='nbn22';b.style.cssText='position:fi
 b.innerHTML='<span style="font-size:22px">🔔</span><span style="flex:1;font-weight:700;font-size:14px">'+esc(ntx(rows[0]))+(rows.length>1?' <small style="opacity:.85">(+'+(rows.length-1)+')</small>':'')+'</span><button id="nbn22b" style="background:#fff;color:#0B4FB8;border:0;padding:8px 14px;font:inherit;font-weight:800;border-radius:8px">تم</button>';
 document.getElementById('nbn22b').onclick=async()=>{b.remove();(S.nts||[]).forEach(r=>r.is_read=true);try{await req('/rest/v1/notifications?is_read=eq.false',{m:'PATCH',b:{is_read:true},h:{Prefer:'return=minimal'}})}catch(e){}}}
 const _sn22=syncNotifs;syncNotifs=async function(first){const before=NID;await _sn22(first);try{const fresh=(S.nts||[]).filter(r=>!r.is_read&&r.id>before);if(S.me&&S.me.role!='client'&&fresh.length&&!first)beep22();nbn22()}catch(e){}};
+/* add23: connexion par nom d'utilisateur (ou e-mail) */
+const _dl23=doLogin;doLogin=async function(){if(!API.on())return _dl23();const f=$('#lu');if(!f)return _dl23();const u=f.value.trim();if(u&&u.indexOf('@')<0){try{const em=await req('/rest/v1/rpc/email_for_username',{m:'POST',b:{p_u:u}});if(!em||typeof em!='string'){toast('اسم المستخدم غير موجود');return}f.value=em}catch(e){toast(errAr(e));return}}return _dl23()};
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
