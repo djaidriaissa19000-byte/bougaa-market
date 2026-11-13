@@ -682,6 +682,13 @@ const isCli=()=>SV()&&S.me&&S.me.role=='client';
 const _rt18=rate;rate=async function(id,n){if(!isCli())return _rt18(id,n);const o=S.orders.find(x=>x.id==id);if(!o||o.raw!='delivered'){toast('يمكن التقييم بعد التسليم');return}if(RV[o.sid]){toast('قيّمت هذا الطلب من قبل');return}try{await req('/rest/v1/reviews',{m:'POST',h:{Prefer:'return=minimal'},b:{order_id:o.sid,client_id:API.ses.uid,store_id:o.store,driver_id:o.drvId||null,store_rating:n}});RV[o.sid]=n;o.rate=n;render();toast('شكرا لتقييمك ✓')}catch(e){toast(errAr(e))}};
 async function sendRev(){const o=revTarget(),r1=S.r1,r2=S.r2,tip=S.tip||0,cm=(($('#rc')||{}).value||'').trim().slice(0,500)||null;if(!o)return;try{await req('/rest/v1/reviews',{m:'POST',h:{Prefer:'return=minimal'},b:{order_id:o.sid,client_id:API.ses.uid,store_id:o.store,driver_id:o.drvId||null,store_rating:r1,driver_rating:o.drvId?r2:null,comment:cm,tip}});RV[o.sid]=r1;o.rate=r1}catch(e){toast(errAr(e))}}
 
+/* ===== تسجيل الموصل (شاشة خاصة) + شاشة انتظار الموافقة ===== */
+V.regdrv=()=>V.regc().replace("regC()","regD()").replace("go('home',{role:'client'})","go('login',{role:'driver'})");
+async function regD(){if(!API.on()){go('driver',{role:'driver',guest:0});return}const u=$('#rn').value.trim(),p=$('#rw').value,e=($('#re').value||'').trim();if(!u||!p){toast('أدخل اسم المستخدم وكلمة السر');return}if(p!==$('#rw2').value){toast('كلمتا السر غير متطابقتين');return}if(p.length<6){toast('كلمة السر 6 أحرف على الأقل');return}if(!vEmail(e)){toast('البريد الإلكتروني مطلوب');return}if(!$('#tc').checked){toast('وافق على الشروط');return}if(!$('#rb').checked){toast('أكّد أنك لست روبوتًا');return}
+ try{const ok=await srvSignUp(e,p,u,'driver');if(ok){await loadMe();S.role='driver';S.regok=0;go('regst',{role:'driver',guest:0});toast('تم إرسال طلبك للإدارة')}else{toast('أُرسل رابط تأكيد إلى بريدك، ثم سجّل دخولك');go('login',{role:'driver'})}}catch(x){toast(errAr(x))}}
+const _go19=go;go=function(s,x){if(s=='driver'&&API.on()){if(!API.ses&&x&&x.role=='driver'){S.role='driver';return _go19('regdrv',{role:'driver',guest:0})}if(API.ses&&S.me&&S.me.role=='driver'&&S.me.approval!='approved')return _go19('regst',{role:'driver',guest:0})}return _go19(s,x)};
+setInterval(async()=>{if(S.scr!='regst'||!SV()||!S.me||S.me.role!='driver')return;try{await loadMe();if(S.me.approval=='approved'){S.regok=1;go('driver',{role:'driver',guest:0});toast('تمت الموافقة على حسابك ✓')}}catch(e){}},6000);
+
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
