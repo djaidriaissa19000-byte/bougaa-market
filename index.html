@@ -727,8 +727,8 @@ document.getElementById('nbn22b').onclick=async()=>{b.remove();(S.nts||[]).forEa
 const _sn22=syncNotifs;syncNotifs=async function(first){const before=NID;await _sn22(first);try{const fresh=(S.nts||[]).filter(r=>!r.is_read&&r.id>before);if(S.me&&S.me.role!='client'&&fresh.length&&!first)beep22();nbn22()}catch(e){}};
 /* add23: connexion par nom d'utilisateur (ou e-mail) — le champ garde le pseudo saisi */
 let P23='';const _sc23=saveCred;saveCred=function(u,p){return _sc23(P23&&String(u).indexOf('@')>=0?P23:u,p)};
-const _dl23=doLogin;doLogin=async function(){if(!API.on())return _dl23();const f=$('#lu');if(!f)return _dl23();const u=f.value.trim();P23='';if(u&&u.indexOf('@')<0){try{const em=await req('/rest/v1/rpc/email_for_username',{m:'POST',b:{p_u:u}});if(!em||typeof em!='string'){toast('اسم المستخدم غير موجود');return}P23=u;f.value=em}catch(e){toast(errAr(e));return}}
-try{return await _dl23()}finally{if(P23){const g=$('#lu');if(g)g.value=P23;P23=''}}};
+try{if(!localStorage.getItem('bgmp_c23')){localStorage.setItem('bgmp_c23','1');if(S.saved&&String(S.saved.u||'').indexOf('@')>=0)clearCred()}}catch(e){}const _dl23=doLogin;doLogin=async function(){if(!API.on())return _dl23();const f=$('#lu');if(!f)return _dl23();const u=f.value.trim();P23='';let h=null;if(u&&u.indexOf('@')<0){try{const em=await req('/rest/v1/rpc/email_for_username',{m:'POST',b:{p_u:u}});if(!em||typeof em!='string'){toast('اسم المستخدم غير موجود');return}P23=u;h=document.createElement('input');h.type='hidden';h.value=em;f.id='lu0';h.id='lu';f.parentNode.appendChild(h)}catch(e){toast(errAr(e));return}}
+try{return await _dl23()}finally{if(h){h.remove();f.id='lu'}P23=''}};
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
