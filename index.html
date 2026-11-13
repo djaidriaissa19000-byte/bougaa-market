@@ -763,6 +763,9 @@ const _rg27=V.regm;V.regm=()=>{let h=_rg27();try{const t='أوفّر خدمة ا
 /* add28: ordre des boutons: ajouter produit, parcourir, livreurs */
 const _m28=V.merchant;V.merchant=()=>{let h=_m28();try{const P='<div style="padding:12px 20px 0"><button class="btn" style="position:relative;justify-content:center;text-align:center" onclick="',a=h.indexOf(P+"go('drivers')\">"),b=h.indexOf(P+"S.mv26=1;go('home')\">"),k=h.indexOf('<button class="btn" style="position:relative;justify-content:center;text-align:center" onclick="go(\'addp\')">');if(a>=0&&b>a&&k>b){const d=h.lastIndexOf('<div',k),drv=h.slice(a,b),brw=h.slice(b,d);h=h.slice(0,a)+h.slice(d);const k2=h.indexOf('<button class="btn" style="position:relative;justify-content:center;text-align:center" onclick="go(\'addp\')">'),e=h.indexOf('</button>',k2)+9;const f=x=>x.replace('<div style="padding:12px 20px 0">','<div style="padding:10px 0 0">');h=h.slice(0,e)+f(brw)+f(drv)+h.slice(e)}}catch(e){}return h};
 
+/* add29: espace après le waw */
+const _m29=V.merchant;V.merchant=()=>_m29().replace('تصفّح المتاجر والسلع','تصفّح المتاجر و السلع');
+
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
