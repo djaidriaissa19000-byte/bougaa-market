@@ -1586,6 +1586,14 @@ async function poll(){const o=live();if(!o||S.scr!='track')return;try{const r=aw
 setInterval(poll,8000);
 const _t=V.track;V.track=function(){let h=_t();if(!live())return h;h=h.replace('id="trkmap"','id="trkmap2"');setTimeout(()=>{draw();poll()},120);return h};
 })();
+/* add46: تبسيط — إخفاء الشاشات الثانوية (بدون حذفها) */
+(function(){
+const H=new Set(['ideas','vq','flash','reord','sched','pay','rate2','otp','look','ntset','rules','regst','stats','mpromo','rev','cred','inv','dhist','addr','gmset','srv']);
+window.SIMPLE=true;window.HIDDEN=H;
+function bad(a){if(/openIdeas\(/.test(a))return true;const c=a.match(/openChat\(\\?'([^'\\]*)/);if(c&&c[1].indexOf(':')<0)return true;const re=/(?:go|nx)\(\\?'(\w+)/g;let m,hit=false,ok=false;while((m=re.exec(a))){if(H.has(m[1]))hit=true;else ok=true}return hit&&!ok}
+function prune(){if(!window.SIMPLE||S.role=='admin'||H.has(S.scr))return;document.querySelectorAll('[onclick]').forEach(e=>{if(bad(e.getAttribute('onclick')||'')){const p=e.parentElement;e.remove();if(p&&p.id!='scr'&&!p.children.length&&!p.textContent.trim())p.remove()}})}
+const _r=render;render=function(){_r();try{prune()}catch(e){}};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
