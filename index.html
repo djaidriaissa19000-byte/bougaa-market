@@ -1530,6 +1530,15 @@ V.store=function(){let h=_v();const s=STORES.find(x=>x.id==S.store);if(s&&s.open
 })();
 /* add40: statut boutique aussi pour les visiteurs non connectes */
 (function(){const _s=syncCatalog;syncCatalog=async function(){await _s();try{if(!(API.on()&&!API.ses))return;const rows=await req('/rest/v1/stores?select=id,is_open,delivers&deleted_at=is.null');const m={};rows.forEach(r=>m[r.id]=r);STORES.forEach(s=>{const r=s.sid&&m[s.sid];if(r){s.open=r.is_open;s.del=r.delivers}})}catch(e){}}})();
+/* add41: recuperation du mot de passe par code a 6 chiffres (email) */
+(function(){
+const em=()=>API.on()&&S.fp&&S.fp.m=='email';
+const _s=fpSend;fpSend=async function(){if(!API.on()||S.fp.m=='phone')return _s();const v=$('#fc').value.trim();if(!vEmail(v)){toast('أدخل بريدا صحيحا');return}try{await req('/auth/v1/recover',{m:'POST',b:{email:v}});S.fp.c=v;S.fp.st=1;render();toast('أُرسل الرمز إلى بريدك ✓')}catch(e){toast(errAr(e))}};
+const _c=fpCode;fpCode=async function(){if(!em())return _c();const t=($('#fk').value||'').trim();if(!/^\d{6}$/.test(t)){toast('أدخل الرمز من 6 أرقام');return}try{const r=await req('/auth/v1/verify',{m:'POST',b:{type:'recovery',email:S.fp.c,token:t}});if(!r||!r.access_token)throw new Error('invalid');S.fp.tok=r.access_token;S.fp.st=2;render()}catch(e){toast('الرمز غير صحيح أو منتهي الصلاحية')}};
+const _n=fpNew;fpNew=async function(){if(!em())return _n();const a=$('#fn1').value,b=$('#fn2').value;if(a.length<6){toast('6 أحرف على الأقل');return}if(a!==b){toast('كلمتا السر غير متطابقتين');return}try{const r=await fetch(API.url()+'/auth/v1/user',{method:'PUT',headers:{apikey:API.key(),'Content-Type':'application/json',Authorization:'Bearer '+S.fp.tok},body:JSON.stringify({password:a})});if(!r.ok){const j=await r.json().catch(()=>({}));toast(/different|same/i.test(j.msg||j.message||'')?'اختر كلمة سر مختلفة عن القديمة':'تعذّر تغيير كلمة السر');return}S.fp=null;go('login');toast('تم تغيير كلمة السر ✓ سجّل دخولك')}catch(e){toast('تعذّر تغيير كلمة السر')}};
+window.fpResend=async function(){try{await req('/auth/v1/recover',{m:'POST',b:{email:S.fp.c}});toast('أُرسل رمز جديد ✓')}catch(e){toast(errAr(e))}};
+const _f=V.forgot;V.forgot=function(){let h=_f();if(!(API.on()&&S.fp&&S.fp.m=='email'))return h;return h.replace(/<br><span style="font-size:12\.5px">\(نموذج تجريبي[^<]*<\/span>/,'').replace("onclick=\"toast('تم إرسال رمز جديد')\"",'onclick="fpResend()"')};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
