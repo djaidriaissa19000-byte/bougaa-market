@@ -1528,6 +1528,8 @@ storeCard=function(s){let h=_c(s);if(s.open===false)h=h.replace(/(★ [^<]*· <b
 const _v=V.store;
 V.store=function(){let h=_v();const s=STORES.find(x=>x.id==S.store);if(s&&s.open===false)h=h.replace(/<span class="chip on"([^>]*)>مفتوح الآن<\/span>/,'<span class="chip"$1>مغلق الآن</span>');if(s&&s.del===false&&h.indexOf('بدون توصيل')<0)h=h.replace(/(<span class="chip[^"]*"[^>]*>مغلق الآن<\/span>|<span class="chip[^"]*"[^>]*>مفتوح الآن<\/span>)/,'$1<span class="chip" style="padding:2px 12px;font-size:12.5px;display:inline-block">استلام من المتجر فقط</span>');return h};
 })();
+/* add40: statut boutique aussi pour les visiteurs non connectes */
+(function(){const _s=syncCatalog;syncCatalog=async function(){await _s();try{if(!(API.on()&&!API.ses))return;const rows=await req('/rest/v1/stores?select=id,is_open,delivers&deleted_at=is.null');const m={};rows.forEach(r=>m[r.id]=r);STORES.forEach(s=>{const r=s.sid&&m[s.sid];if(r){s.open=r.is_open;s.del=r.delivers}})}catch(e){}}})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
