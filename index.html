@@ -1557,6 +1557,11 @@ const _t=V.track;V.track=function(){let h=_t();const o=live();if(!o)return h;h=h
 })();
 /* add43: etat du GPS visible sur l'ecran du livreur (+ reessayer) */
 (function(){const _d=V.driver;V.driver=function(){let h=_d();return h.replace(/(<div class="gm"[^>]*><\/div>)/,'$1<div class="geotxt" onclick="startGeo()" style="position:absolute;z-index:3;top:66px;inset-inline-start:12px;background:#fff;padding:6px 12px;font-weight:900;font-size:12.5px;color:var(--b);box-shadow:0 2px 8px rgba(8,58,140,.25);cursor:pointer">'+geoTxt()+'</div>')}})();
+/* add44: GPS - repli sur la localisation reseau (PC sans GPS) */
+startGeo=function(){if(_gw!=null)return;if(!navigator.geolocation){S.geoSt='unsupported';geoUpd();return}S.geoSt='wait';geoUpd();
+const ok=p=>{S.geo={lat:p.coords.latitude,lng:p.coords.longitude,acc:Math.round(p.coords.accuracy)};S.geoSt='ok';geoUpd()};
+const bad=e=>{S.geoSt=e.code==1?'denied':(S.geo?'ok':'err');if(_gw!=null){try{navigator.geolocation.clearWatch(_gw)}catch(x){}}_gw=null;geoUpd()};
+_gw=navigator.geolocation.watchPosition(ok,e=>{if(e.code==1){bad(e);return}try{navigator.geolocation.clearWatch(_gw)}catch(x){}_gw=navigator.geolocation.watchPosition(ok,bad,{enableHighAccuracy:false,maximumAge:60000,timeout:30000})},{enableHighAccuracy:true,maximumAge:2000,timeout:12000})};
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
