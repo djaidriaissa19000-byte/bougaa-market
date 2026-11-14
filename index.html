@@ -1555,6 +1555,8 @@ async function poll(){const o=live();if(!o||S.scr!='track')return;try{const r=aw
 setInterval(poll,8000);
 const _t=V.track;V.track=function(){let h=_t();const o=live();if(!o)return h;h=h.replace(/<div class="gm"[^>]*><\/div>/,'<div id="trkmap" style="position:absolute;inset:0;background:#E3EFFF"></div>');h=h.replace('<div style="position:absolute;z-index:2;bottom:10px','<div id="trktxt" style="position:absolute;z-index:3;top:10px;inset-inline-start:10px;background:#fff;padding:6px 12px;font-weight:900;font-size:12.5px;color:var(--b)">جارٍ تحديد موقع الموصل…</div><div style="position:absolute;z-index:2;bottom:10px');setTimeout(()=>{drawT();poll()},60);return h};
 })();
+/* add43: etat du GPS visible sur l'ecran du livreur (+ reessayer) */
+(function(){const _d=V.driver;V.driver=function(){let h=_d();return h.replace(/(<div class="gm"[^>]*><\/div>)/,'$1<div class="geotxt" onclick="startGeo()" style="position:absolute;z-index:3;top:66px;inset-inline-start:12px;background:#fff;padding:6px 12px;font-weight:900;font-size:12.5px;color:var(--b);box-shadow:0 2px 8px rgba(8,58,140,.25);cursor:pointer">'+geoTxt()+'</div>')}})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
