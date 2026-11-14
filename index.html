@@ -800,6 +800,712 @@ const _rd33=render;render=function(){_rd33();try{const sc=$('#scr');if(!sc)retur
 V.mtoday=()=>{const L=[...S.orders.map(o=>Object.assign({},o,{mine:1})),{id:'A12',st:'جديد',items:'سميد 5 كغ × 2',t:1400}].reverse();return topbar('طلبات اليوم','merchant')+'<div style="padding:16px 20px 24px;display:flex;flex-direction:column;gap:10px">'+L.map(o=>'<div class="card" style="padding:12px"><div class="row" style="justify-content:space-between"><b>طلب #'+o.id+'</b><span class="chip '+(o.st=='جديد'?'on':'')+'" style="padding:2px 10px;font-size:12px">'+o.st+'</span></div><div style="color:var(--t);font-size:13px;margin:4px 0 8px">'+esc(o.items)+' · '+fmt(o.t)+'</div>'+(o.mine&&o.st=='جديد'?'<button class="btn sm" onclick="setSt('+o.id+',\'قيد التحضير\')">قبول الطلب</button>':o.mine&&o.st=='قيد التحضير'?'<button class="btn sm" onclick="setSt('+o.id+',\'جاهز للتوصيل\')">جاهز للتوصيل</button>':'')+(SV()&&o.sid?'<div class="row" style="gap:8px;margin-top:8px"><button class="btn o sm" style="flex:1;height:38px" onclick="openOC(\''+o.sid+'\',\''+(o.cid||'')+'\',\'الزبون · طلب #'+o.id+'\',\'c\')">راسل الزبون</button>'+(o.drvId?'<button class="btn o sm" style="flex:1;height:38px" onclick="openOC(\''+o.sid+'\',\''+o.drvId+'\',\'الموصل · طلب #'+o.id+'\',\'c\')">راسل الموصل</button>':'')+'</div>':'')+'</div>').join('')+'</div>'};
 const _m34=V.merchant;V.merchant=()=>_m34().split("var e=document.getElementById('ords26');e&&e.scrollIntoView({behavior:'smooth'})").join("go('mtoday')");
 
+/* add35 i18n ar/fr/am */
+(function(){
+const RAW=`،|,|,
+؟|?|?
+دج|DA|DA
+العربية|العربية|العربية
+عربية|عربية|عربية
+الأمازيغية|Tamaziɣt|Tamaziɣt
+الأمازيغية (نموذج)|Tamaziɣt|Tamaziɣt
+اختر لغتك|Choisissez votre langue|Fren tutlayt-ik
+التالي|Suivant|Ɣer zdat
+ابدأ|Commencer|Bdu
+ابدأ الآن|Commencer maintenant|Bdu tura
+اختر نوع حسابك|Choisissez votre type de compte|Fren anaw n umiḍan-ik
+زبون|Client|Amsuter
+الزبون|Client|Amsuter
+تاجر|Commerçant|Amzenzi
+التاجر|Le commerçant|Amzenzi
+موصل|Livreur|Alivrur
+الموصل|Le livreur|Alivrur
+موصل الطلبات|Livreur de commandes|Alivrur n isuturen
+موصل طلبات|Livreur de commandes|Alivrur n isuturen
+الموصلون|Livreurs|Ilivruren
+الموصلون في الخدمة|Livreurs en service|Ilivruren yellan di lxedma
+موصلو الطلبات|Livreurs|Ilivruren
+زائر|Visiteur|Amcaf
+تسجيل الدخول|Se connecter|Anekcum
+تسجيل الخروج|Se déconnecter|Tuffɣa
+تسجيل الخروج من حسابك؟|Se déconnecter de votre compte ?|Tebɣiḍ ad teffɣeḍ seg umiḍan-ik?
+خروج|Quitter|Ffeɣ
+إنشاء حساب|Créer un compte|Snulfu amiḍan
+إنشاء الحساب|Créer le compte|Snulfu amiḍan
+أنشئ حسابك|Créez votre compte|Snulfu amiḍan-ik
+حساب زبون جديد|Nouveau compte client|Amiḍan amaynut n umsuter
+حساب تاجر جديد|Nouveau compte commerçant|Amiḍan amaynut n umzenzi
+أنشئ حساب متجرك|Créez le compte de votre boutique|Snulfu amiḍan n tḥanut-ik
+سجّل حسابك للمتابعة|Inscrivez-vous pour continuer|Jerred amiḍan-ik akken ad tkemmleḍ
+سجّل دخولك|Connectez-vous|Kcem
+سجّل الدخول أولا|Connectez-vous d'abord|Kcem uqbel
+سجّل دخولك لمتابعة التسوق|Connectez-vous pour continuer vos achats|Kcem akken ad tkemmleḍ asuter
+متابعة التصفح|Continuer à parcourir|Kemmel asuter
+ليس لديك حساب؟|Pas de compte ?|Ur ɣur-k ara amiḍan?
+لديك حساب؟|Vous avez un compte ?|Ɣur-k amiḍan?
+اسم المستخدم|Nom d'utilisateur|Isem n useqdac
+كلمة السر|Mot de passe|Awal uffir
+كلمة السر الجديدة|Nouveau mot de passe|Awal uffir amaynut
+كلمة السر الحالية|Mot de passe actuel|Awal uffir amiran
+تأكيد كلمة السر|Confirmer le mot de passe|Sentem awal uffir
+نسيت كلمة السر؟|Mot de passe oublié ?|Tettuḍ awal uffir?
+نسيت كلمة السر|Mot de passe oublié|Tettuḍ awal uffir
+استرجاع كلمة السر|Récupérer le mot de passe|Err-d awal uffir
+تغيير كلمة السر|Changer le mot de passe|Beddel awal uffir
+حفظ كلمة السر|Enregistrer le mot de passe|Sekles awal uffir
+كلمة السر غير صحيحة|Mot de passe incorrect|Awal uffir ur yeṣṣeḥ ara
+كلمتا السر غير متطابقتين|Les mots de passe ne correspondent pas|Awalen uffiren ur mṣadan ara
+كلمة السر 6 أحرف على الأقل|Mot de passe : 6 caractères minimum|Awal uffir: 6 n yisekkilen ɣer drus
+البريد الإلكتروني|E-mail|Imayl
+البريد الإلكتروني (اختياري)|E-mail (facultatif)|Imayl (ur yelzem ara)
+البريد الإلكتروني مطلوب|L'e-mail est obligatoire|Imayl yelzem
+أو بالبريد الإلكتروني|Ou par e-mail|Neɣ s imayl
+عبر البريد الإلكتروني|Par e-mail|S imayl
+عبر الهاتف|Par téléphone|S tilifun
+البريد أو كلمة السر غير صحيحة|E-mail ou mot de passe incorrect|Imayl neɣ awal uffir ur yeṣṣeḥ ara
+أدخل اسم المستخدم وكلمة السر|Saisissez le nom d'utilisateur et le mot de passe|Sekcem isem n useqdac d wawal uffir
+اسم المستخدم غير موجود|Nom d'utilisateur introuvable|Isem n useqdac ulac-it
+اسم المستخدم مستعمل من قبل، اختر اسمًا آخر|Nom d'utilisateur déjà pris, choisissez-en un autre|Isem n useqdac yettwaseqdac yakan, fren wayeḍ
+الاسم|Nom|Isem
+اللقب|Nom de famille|Isem n twacult
+الاسم الكامل|Nom complet|Isem ummid
+الاسم واللقب|Nom et prénom|Isem d useggas
+رقم الهاتف|Numéro de téléphone|Uṭṭun n tilifun
+هاتف|Téléphone|Tilifun
+تاريخ الميلاد|Date de naissance|Azemz n tlalit
+العنوان|Adresse|Tansa
+عنواني|Mon adresse|Tansa-inu
+عناويني|Mes adresses|Tansiwin-inu
+البلدية|Commune|Tamurt
+البلدية / الحي|Commune / quartier|Tamurt / Aḥric
+الحي|Quartier|Aḥric
+الشارع|Rue|Abrid
+الحي / الشارع|Quartier / rue|Aḥric / Abrid
+إضافة عنوان|Ajouter une adresse|Rnu tansa
+حفظ العنوان|Enregistrer l'adresse|Sekles tansa
+تمت إضافة العنوان|Adresse ajoutée|Tansa tettwarna
+المنزل|Maison|Axxam
+العمل|Travail|Axeddim
+بوقاعة|Bougaa|Bougaa
+بوقاعة، سطيف|Bougaa, Sétif|Bougaa, Sṭif
+سطيف|Sétif|Sṭif
+بوقاعة و البلديات المجاورة|Bougaa et communes voisines|Bougaa d tmura i d-yezzin
+بلديات الجوار|Communes voisines|Tmura i d-yezzin
+الرئيسية|Accueil|Agejdan
+العودة للرئيسية|Retour à l'accueil|Uɣal ɣer ugejdan
+بحث|Recherche|Anadi
+ابحث بالاسم|Rechercher par nom|Nadi s yisem
+ابحث عن متجر أو منتج|Rechercher une boutique ou un produit|Nadi ɣef tḥanut neɣ ayen
+ابحث عن متجر، منتج، أو مستعمل|Rechercher boutique, produit ou occasion|Nadi ɣef tḥanut, ayen neɣ ayen yettwaseqdacen
+ابحث عن منتج، متجر أو خدمة|Rechercher produit, boutique ou service|Nadi ɣef wayen, tḥanut neɣ lxedma
+لا نتائج|Aucun résultat|Ulac igmaḍ
+الأقسام|Catégories|Tiggayin
+الكل|Tout|Akk
+مواد غذائية|Alimentation|Imekla
+مواد غذائية بوقاعة|Alimentation Bougaa|Imekla n Bougaa
+خضر وفواكه|Fruits et légumes|Ixḍaren d yimɣi
+مطاعم|Restaurants|Timɛayin
+ملابس|Vêtements|Iceṭṭiḍen
+ألبسة العائلة|Vêtements famille|Iceṭṭiḍen n twacult
+هواتف|Téléphones|Tilifunin
+أجهزة|Appareils|Isebtar
+أثاث|Meubles|Aẓekka
+سيارات ومركبات|Voitures et véhicules|Tikeṛyin
+خدمات|Services|Tixeddimin
+أخرى|Autres|Wiyaḍ
+حليب|Lait|Aɣi
+بيتزا|Pizza|Pizza
+المتاجر|Boutiques|Tiḥanutin
+متاجر|Boutiques|Tiḥanutin
+المتجر|Boutique|Taḥanut
+متجر|Boutique|Taḥanut
+المتاجر المميزة|Boutiques à la une|Tiḥanutin yettwafernen
+تصفح المتاجر|Parcourir les boutiques|Wali tiḥanutin
+تصفّح المتاجر والسلع|Parcourir boutiques et produits|Wali tiḥanutin d yiɣawsiwen
+تصفّح المتاجر و السلع|Parcourir boutiques et produits|Wali tiḥanutin d yiɣawsiwen
+عرض المتجر|Voir la boutique|Wali taḥanut
+اسم المتجر|Nom de la boutique|Isem n tḥanut
+المنتجات|Produits|Iɣawsiwen
+منتجات|Produits|Iɣawsiwen
+المنتج|Produit|Aɣawsiw
+اسم المنتج|Nom du produit|Isem n uɣawsiw
+منتجاتي|Mes produits|Iɣawsiwen-inu
+منتجات التاجر|Produits du commerçant|Iɣawsiwen n umzenzi
+إضافة منتج|Ajouter un produit|Rnu aɣawsiw
+حفظ المنتج|Enregistrer le produit|Sekles aɣawsiw
+تمت إضافة المنتج|Produit ajouté|Aɣawsiw yettwarnu
+تم حذف المنتج|Produit supprimé|Aɣawsiw yettwakkes
+صورة المنتج|Photo du produit|Tawlaft n uɣawsiw
+أضف صورة المنتج|Ajouter la photo du produit|Rnu tawlaft n uɣawsiw
+السعر (دج)|Prix (DA)|Azal (DA)
+السعر|Prix|Azal
+متوفر|Disponible|Yella
+متاح|Disponible|Yella
+نفد|Épuisé|Yekfa
+مفتوح|Ouvert|Yeldi
+مغلق|Fermé|Ixelq
+مفتوح الآن|Ouvert maintenant|Yeldi tura
+مغلق الآن|Fermé maintenant|Ixelq tura
+المتجر مفتوح الآن|La boutique est ouverte|Taḥanut teldi tura
+المتجر مغلق الآن|La boutique est fermée|Taḥanut texleq tura
+أوفّر خدمة التوصيل|Je propose la livraison|Ssufɣeɣ lxedma n usiweḍ
+خدمة التوصيل مفعّلة|Livraison activée|Lxedma n usiweḍ tettwarmed
+خدمة التوصيل متوقفة|Livraison désactivée|Lxedma n usiweḍ tfra
+السلة|Panier|Taqecwalt
+السلة فارغة|Le panier est vide|Taqecwalt d tilemt
+أضف إلى السلة|Ajouter au panier|Rnu ɣer teqecwalt
+أُضيف إلى السلة|Ajouté au panier|Yettwarnu ɣer teqecwalt
+أُضيف للسلة|Ajouté au panier|Yettwarnu ɣer teqecwalt
+عرض السلة|Voir le panier|Wali taqecwalt
+راجع السلة|Vérifier le panier|Wali taqecwalt
+المجموع|Total|Amatu
+الإجمالي|Total|Amatu
+رسوم التوصيل|Frais de livraison|Axlaṣ n usiweḍ
+التوصيل|Livraison|Asiweḍ
+توصيل|Livraison|Asiweḍ
+إرسال الطلب|Envoyer la commande|Azen asuter
+تأكيد الطلب|Confirmer la commande|Sentem asuter
+تم إرسال طلبك|Votre commande a été envoyée|Asuter-ik yettwazen
+تم استلام طلبك|Votre commande est reçue|Asuter-ik yewweḍ
+الدفع|Paiement|Axlaṣ
+الدفع عند الاستلام|Paiement à la livraison|Axlaṣ ticki d-yewweḍ
+عند الاستلام|À la livraison|Ticki d-yewweḍ
+طريقة الدفع|Mode de paiement|Tarrayt n uxlaṣ
+الطلبات|Commandes|Isuturen
+طلباتي|Mes commandes|Isuturen-inu
+الطلب|La commande|Asuter
+طلب|Commande|Asuter
+طلبك|Votre commande|Asuter-ik
+طلبك رقم|Votre commande n°|Asuter-ik uṭṭun
+طلبات اليوم|Commandes du jour|Isuturen n ass-a
+الطلبات الواردة|Commandes reçues|Isuturen i d-yusan
+لا توجد طلبات|Aucune commande|Ulac isuturen
+لا توجد طلبات بعد|Aucune commande pour l'instant|Ulac isuturen ar tura
+حالة الطلب|Statut de la commande|Addad n usuter
+تتبع الطلب|Suivre la commande|Ḍfer asuter
+قبول الطلب|Accepter la commande|Qbel asuter
+رفض|Refuser|Agi
+قبول|Accepter|Qbel
+تم قبول الطلب|Commande acceptée|Asuter yettwaqbel
+تم رفض الطلب|Commande refusée|Asuter yettwagi
+تم إلغاء الطلب|Commande annulée|Asuter yettwasefsex
+إلغاء الطلب|Annuler la commande|Sefsex asuter
+جاهز للتوصيل|Prêt pour la livraison|Yewjed i usiweḍ
+قيد التحضير|En préparation|Yettwaheyyaʔ
+قيد المراجعة|En cours de vérification|Yettwaleqqem
+في الطريق|En route|Deg ubrid
+في الطريق إليك|En route vers vous|Deg ubrid ɣur-k
+تم التسليم|Livré|Yettwasiweḍ
+ملغى|Annulé|Yettwasefsex
+مقبول|Accepté|Yettwaqbel
+مرفوض|Refusé|Yettwagi
+جديد|Nouveau|Amaynut
+في الخدمة|En service|Deg lxedma
+خارج الخدمة|Hors service|Berra n lxedma
+في الخدمة الآن|En service maintenant|Deg lxedma tura
+أنت في الخدمة|Vous êtes en service|Aql-ak deg lxedma
+أنت خارج الخدمة|Vous êtes hors service|Aql-ak berra n lxedma
+أنت الآن في الخدمة|Vous êtes maintenant en service|Aql-ak tura deg lxedma
+أنت الآن خارج الخدمة|Vous êtes maintenant hors service|Aql-ak tura berra n lxedma
+وصلت إلى المتجر|Arrivé à la boutique|Wwḍeɣ ɣer tḥanut
+استلمت الطلب|J'ai récupéré la commande|Ṭṭfeɣ asuter
+وصلت|Arrivé|Wwḍeɣ
+تم التسليم، بالهناء والشفاء|Livré, bon appétit|Yettwasiweḍ, ssaha
+راسل الزبون|Écrire au client|Azen i umsuter
+راسل الموصل|Écrire au livreur|Azen i ulivrur
+راسل التاجر|Écrire au commerçant|Azen i umzenzi
+راسل المتجر|Écrire à la boutique|Azen i tḥanut
+راسل البائع|Écrire au vendeur|Azen i umzenzi
+الرسائل|Messages|Iznan
+رسالة|Message|Izen
+اكتب رسالتك هنا|Écrivez votre message ici|Aru izen-ik da
+اكتب رسالة|Écrire un message|Aru izen
+إرسال|Envoyer|Azen
+دردشة|Discussion|Adiwenni
+الدردشة|Discussion|Adiwenni
+لا توجد رسائل|Aucun message|Ulac iznan
+لا توجد محادثات بعد|Aucune conversation pour l'instant|Ulac adiwenni ar tura
+الشكاوي والتبليغات|Réclamations et signalements|Tuttriwin d yineqqisen
+الشكاوى|Réclamations|Tuttriwin
+شكوى|Réclamation|Tuttra
+أرسل شكوى أو رسالة للإدارة|Envoyer une réclamation ou un message à l'administration|Azen tuttra neɣ izen i usewway
+أرسل لنا مشكلتك|Envoyez-nous votre problème|Azen-aɣ-d ugur-ik
+اكتب رسالتك للإدارة|Écrivez votre message à l'administration|Aru izen-ik i usewway
+ما المشكل؟|Quel est le problème ?|D acu i d ugur?
+اختر نوع المشكل|Choisissez le type de problème|Fren anaw n ugur
+إرسال للإدارة|Envoyer à l'administration|Azen i usewway
+تم إرسال رسالتك للإدارة|Message envoyé à l'administration|Izen-ik yettwazen i usewway
+تم إرسال رسالتك|Message envoyé|Izen-ik yettwazen
+أُرسلت الشكوى للإدارة|Réclamation envoyée à l'administration|Tuttra tettwazen i usewway
+ردّ الإدارة:|Réponse de l'administration :|Tiririt n usewway:
+الإدارة|Administration|Asewway
+إعدادات التطبيق|Paramètres de l'application|Iɣewwaren n usnas
+الإعدادات|Paramètres|Iɣewwaren
+إعدادات المتجر|Paramètres de la boutique|Iɣewwaren n tḥanut
+اللغة|Langue|Tutlayt
+المظهر|Apparence|Udem
+الوضع الليلي|Mode nuit|Askar n yiḍ
+حجم الخط|Taille du texte|Teɣzi n isekkilen
+صغير|Petit|Meẓẓi
+عادي|Normal|Amagnu
+كبير|Grand|Meqqer
+الإشعارات|Notifications|Ilɣuyen
+لا توجد إشعارات|Aucune notification|Ulac ilɣuyen
+حفظ بيانات الدخول|Mémoriser mes identifiants|Sekles isefka n unekcum
+تم حذف البيانات المحفوظة|Données enregistrées supprimées|Isefka yettwaskelsen ttwakksen
+شروط الاستخدام وسياسة الخصوصية|Conditions d'utilisation et confidentialité|Tiwtilin n useqdec d tudert tuffirt
+شروط الاستخدام|Conditions d'utilisation|Tiwtilin n useqdec
+سياسة الخصوصية|Politique de confidentialité|Tasertit n tudert tuffirt
+الشروط والخصوصية|Conditions et confidentialité|Tiwtilin d tudert tuffirt
+حذف حسابي|Supprimer mon compte|Kkes amiḍan-inu
+حذف الحساب|Supprimer le compte|Kkes amiḍan
+حذف الحساب نهائيا؟|Supprimer définitivement le compte ?|Ad tekkseḍ amiḍan i dayen?
+اضغط مرة أخرى لتأكيد حذف حسابك|Appuyez encore pour confirmer la suppression|Ssed tikkelt-nniḍen akken ad tsentmeḍ
+تم حذف حسابك|Votre compte a été supprimé|Amiḍan-ik yettwakkes
+حسابي|Mon compte|Amiḍan-inu
+الحساب|Compte|Amiḍan
+المفضلة|Favoris|Imenyifen
+لا توجد عناصر في المفضلة|Aucun favori|Ulac imenyifen
+أُضيف إلى المفضلة|Ajouté aux favoris|Yettwarnu ɣer yimenyifen
+أُزيل من المفضلة|Retiré des favoris|Yettwakkes seg yimenyifen
+حفظ|Enregistrer|Sekles
+حفظ التعديلات|Enregistrer les modifications|Sekles isenfaren
+حذف|Supprimer|Kkes
+إلغاء|Annuler|Sefsex
+إغلاق|Fermer|Mdel
+تأكيد|Confirmer|Sentem
+تم|Terminé|Yemmed
+نعم|Oui|Ih
+لا|Non|Ala
+أو|ou|neɣ
+و|et|d
+من|de|seg
+إلى|à|ɣer
+الآن|Maintenant|Tura
+اليوم|Aujourd'hui|Ass-a
+أمس|Hier|Iḍelli
+غدا|Demain|Azekka
+الأحد|Dimanche|Lḥed
+الاثنين|Lundi|Letnin
+الثلاثاء|Mardi|Ttlata
+الأربعاء|Mercredi|Larbɛa
+الخميس|Jeudi|Lexmis
+الجمعة|Vendredi|Lǧemɛa
+السبت|Samedi|Sebt
+أيام|jours|ussan
+دقيقة|minute|tazeqqa
+دقائق|minutes|tisdidin
+ساعة|heure|asrag
+كم|km|km
+خطأ|Erreur|Ccuṛ
+جارٍ التحميل|Chargement|Asali
+جارٍ الإرسال|Envoi en cours|Tuzna
+جارٍ التسجيل|Inscription en cours|Tajerrit
+لا يوجد اتصال بالإنترنت|Pas de connexion Internet|Ulac tuqqna n internet
+لا يوجد اتصال بالخادم|Pas de connexion au serveur|Ulac tuqqna ɣer uqeddac
+عاد الاتصال|Connexion rétablie|Tuqqna tuɣal
+فهمت|Compris|Fhamɣ
+جيد|Bien|Yelha
+ممتاز|Excellent|Ɣeẓẓif
+تقييم|Évaluation|Asenqed
+قيّم تجربتك|Évaluez votre expérience|Senqed tarmit-ik
+إرسال التقييم|Envoyer l'évaluation|Azen asenqed
+شكرا لتقييمك|Merci pour votre avis|Tanmirt ɣef usenqed-ik
+شكرا|Merci|Tanemmirt
+شكرا لك|Merci|Tanemmirt
+إكرامية للموصل (اختياري)|Pourboire pour le livreur (facultatif)|Ttip i ulivrur (ur yelzem ara)
+تعليق (اختياري)|Commentaire (facultatif)|Awennit (ur yelzem ara)
+ملاحظة للتاجر / الموصل|Note pour le commerçant / livreur|Tazmilt i umzenzi / ulivrur
+تفاصيل إضافية (اختياري)|Détails supplémentaires (facultatif)|Talqayt-nniḍen (ur yelzem ara)
+الموقع المباشر|Position en direct|Adig usdid
+تحديد موقعي الحالي|Localiser ma position|Ẓer adig-iw
+استخدم موقعي الحالي|Utiliser ma position actuelle|Seqdec adig-iw amiran
+موقعي الحالي|Ma position actuelle|Adig-iw amiran
+فعّل إذن الموقع|Activez l'autorisation de localisation|Rmed turagt n udig
+تم تحديد موقعك|Position détectée|Adig-ik yettwaf
+تعذر تحديد الموقع|Impossible de localiser|Ulamek ad d-naf adig
+خريطة|Carte|Tamwalt
+الخريطة|Carte|Tamwalt
+ساعات العمل|Horaires d'ouverture|Isragen n lxedma
+تم حفظ ساعات العمل|Horaires enregistrés|Isragen n lxedma ttwaskelsen
+وقت التوصيل|Délai de livraison|Akud n usiweḍ
+وقت التحضير|Temps de préparation|Akud n twaheyyiʔt
+معلومات المتجر|Informations de la boutique|Talɣut n tḥanut
+أكمل معلومات المتجر|Complétez les informations de la boutique|Fak talɣut n tḥanut
+أكمل معلومات متجرك|Complétez les informations de votre boutique|Fak talɣut n tḥanut-ik
+أدخل اسم المتجر|Saisissez le nom de la boutique|Sekcem isem n tḥanut
+اسم صاحب المتجر|Nom du propriétaire|Isem n bab n tḥanut
+نوع النشاط|Type d'activité|Anaw n lxedma
+صورة المتجر|Photo de la boutique|Tawlaft n tḥanut
+شعار المتجر|Logo de la boutique|Aselmad n tḥanut
+إنشاء المتجر|Créer la boutique|Snulfu taḥanut
+سجّل متجرك|Inscrivez votre boutique|Jerred taḥanut-ik
+تم إرسال طلب فتح متجرك|Demande d'ouverture envoyée|Asuter n tuldi n tḥanut-ik yettwazen
+تراجع الإدارة بياناتك ووثائقك|L'administration vérifie vos données|Asewway ad iqqim ɣef isefka-ik
+حسابك قيد مراجعة الإدارة|Votre compte est en cours de vérification|Amiḍan-ik yettwaleqqem sɣur usewway
+تمت الموافقة على حسابك|Votre compte est approuvé|Amiḍan-ik yettwaqbel
+لوحة التاجر|Tableau de bord commerçant|Tafelwit n umzenzi
+لوحة الإدارة|Tableau de bord admin|Tafelwit n usewway
+العودة إلى لوحة التاجر|Retour au tableau de bord|Uɣal ɣer tfelwit
+المبيعات|Ventes|Zzenzeɣ
+إجمالي المبيعات|Total des ventes|Amatu n yizenzaten
+أرباحي|Mes gains|Tirbaḥin-inu
+أرباح اليوم|Gains du jour|Tirbaḥin n ass-a
+أرباح التوصيل|Gains de livraison|Tirbaḥin n usiweḍ
+الصافي|Net|Anaẓur
+سجل التوصيلات|Historique des livraisons|Amazray n yisiweḍen
+طلبات متاحة|Commandes disponibles|Isuturen yellan
+طلب توصيل جديد|Nouvelle demande de livraison|Asuter amaynut n usiweḍ
+نبحث عن طلبات قريبة|Recherche de commandes proches|Nettnadi ɣef yisuturen i d-yezzin
+نبحث عن موصل قريب|Recherche d'un livreur proche|Nettnadi ɣef ulivrur i d-yezzin
+طلبك جاهز، نبحث عن موصل|Commande prête, recherche d'un livreur|Asuter-ik yewjed, nettnadi ɣef ulivrur
+التاجر يحضّر طلبك والموصل في الطريق|Le commerçant prépare, le livreur arrive|Amzenzi yettheyyiʔ, alivrur deg ubrid
+التاجر سيؤكد طلبك قريبا|Le commerçant confirmera bientôt|Amzenzi ad isentem asuter-ik s zzreb
+طلبك قيد التحضير|Votre commande est en préparation|Asuter-ik yettwaheyyaʔ
+طلبك في الطريق إليك|Votre commande est en route|Asuter-ik deg ubrid ɣur-k
+الموصل وصل إلى بابك|Le livreur est à votre porte|Alivrur yewweḍ ɣer tewwurt-ik
+الموصل استلم طلبك من المتجر|Le livreur a récupéré votre commande|Alivrur yeṭṭef asuter-ik seg tḥanut
+أنا في الطريق|Je suis en route|Aql-i deg ubrid
+أنا أمام الباب|Je suis devant la porte|Aql-i zdat n tewwurt
+سأصل خلال 5 دقائق|J'arrive dans 5 minutes|Ad wwḍeɣ deg 5 n tisdidin
+مرحبا|Bonjour|Azul
+أهلا|Bienvenue|Ahlan
+أهلا بعودتك|Bon retour|Ahlan s tuɣalin-ik
+مرحبًا بعودتك|Bon retour|Ahlan s tuɣalin-ik
+مرحبًا بك في|Bienvenue sur|Ansuf ɣer
+كل ما تحتاجه في مكان واحد|Tout ce dont vous avez besoin au même endroit|Akk ayen i teḥwaǧeḍ deg yiwen n wadig
+توصيل سريع ومنتجات طازجة|Livraison rapide et produits frais|Asiweḍ arurad d iɣawsiwen n tmellalin
+الأكثر مبيعا|Meilleures ventes|Ayen i d-yezzenzen aṭas
+عروض اليوم|Offres du jour|Isuraf n ass-a
+العروض|Offres|Isuraf
+خصم|Réduction|Asenqes
+مجاني|Gratuit|Baṭel
+سوق المستعمل|Marché de l'occasion|Lsuq n wayen yettwaseqdacen
+المستعمل|Occasion|Yettwaseqdac
+بيع غرض مستعمل|Vendre un objet d'occasion|Zzenz ayen yettwaseqdacen
+انشر إعلانك|Publiez votre annonce|Ssuffeɣ tasnamekt-ik
+نشر الإعلان|Publier l'annonce|Ssuffeɣ tasnamekt
+الإعلانات|Annonces|Tisnamkin
+إعلانات|Annonces|Tisnamkin
+إعلاناتي|Mes annonces|Tisnamkin-inu
+عنوان الإعلان|Titre de l'annonce|Azwel n tsnamekt
+تفاصيل الإعلان|Détails de l'annonce|Talqayt n tsnamekt
+تم نشر الإعلان|Annonce publiée|Tasnamekt tettwasuffeɣ
+لا توجد إعلانات|Aucune annonce|Ulac tisnamkin
+صورة الغرض|Photo de l'objet|Tawlaft n ugrus
+هل ما زال متوفرا؟|Est-il encore disponible ?|Mazal yella?
+نعم متوفر|Oui, disponible|Ih, yella
+الحالة|État|Addad
+شبه جديد|Presque neuf|Qrib d amaynut
+الفئة|Catégorie|Taggayt
+تبليغ|Signaler|Ṭṭel
+الإبلاغ عن الإعلان|Signaler l'annonce|Ṭṭel tasnamekt
+الإبلاغ عن مشكل|Signaler un problème|Ṭṭel ugur
+مشكل في الطلب|Problème avec la commande|Ugur deg usuter
+مشكل في طلب؟|Un problème avec une commande ?|Ugur deg usuter?
+الطلب تأخر|La commande est en retard|Asuter yettwaɛṭṭel
+أريد الإلغاء|Je veux annuler|Bɣiɣ ad sefsxeɣ
+إلغاء أو شكوى|Annulation ou réclamation|Asefsex neɣ tuttra
+المساعدة|Aide|Tallelt
+الدعم الفني|Support technique|Tallelt tatiknikit
+اتصل بنا|Contactez-nous|Nermes-aɣ
+اتصال|Appel|Siwel
+واتساب|WhatsApp|WhatsApp
+فايبر|Viber|Viber
+فتح واتساب|Ouvrir WhatsApp|Ldi WhatsApp
+فتح فايبر|Ouvrir Viber|Ldi Viber
+حول التطبيق|À propos|Ɣef usnas
+التعريف بالتطبيق|Présentation de l'application|Asnas d acu-t
+نسخ|Copier|Nɣel
+مشاركة|Partager|Bḍu
+ادعُ صديقا|Inviter un ami|Ɛreḍ amdakkel
+نقاط|Points|Tinqiḍin
+نقاط الولاء|Points de fidélité|Tinqiḍin n twalit
+نقطة|point|tanqiḍt
+المستخدمون|Utilisateurs|Iseqdacen
+مستخدم|Utilisateur|Aseqdac
+الزبائن|Clients|Imsuturen
+زبائن|Clients|Imsuturen
+التجار|Commerçants|Imzenzayen
+الموصلون في الخدمة الآن|Livreurs en service maintenant|Ilivruren deg lxedma tura
+لا يوجد موصلون في الخدمة حاليا|Aucun livreur en service|Ulac ilivruren deg lxedma tura
+حالة طلب التسجيل|Statut de l'inscription|Addad n usuter n tjerrit
+تسجيل الموصل|Inscription livreur|Tajerrit n ulivrur
+معلومات الموصل|Informations du livreur|Talɣut n ulivrur
+نوع المركبة|Type de véhicule|Anaw n tkeṛust
+دراجة نارية|Moto|Mutu
+سيارة|Voiture|Takeṛust
+دراجة هوائية|Vélo|Tabisikletṭ
+الوثائق|Documents|Isemlalen
+الوثائق المطلوبة|Documents requis|Isemlalen i yettwasutren
+رخصة السياقة|Permis de conduire|Turagt n usuɣu
+بطاقة الهوية|Carte d'identité|Tamagit
+التأمين|Assurance|Taɣellist
+ابدأ العمل|Commencer à travailler|Bdu axeddim
+اضغط للدخول|Appuyez pour entrer|Ssed akken ad tkecmeḍ
+اضغط للخروج|Appuyez pour sortir|Ssed akken ad teffɣeḍ
+رمز التحقق|Code de vérification|Tangalt n usenqed
+إرسال الرمز|Envoyer le code|Azen tangalt
+إعادة إرسال الرمز|Renvoyer le code|Ɛawed azen tangalt
+تم إرسال الرمز|Code envoyé|Tangalt tettwazen
+الرمز غير صحيح|Code incorrect|Tangalt ur teṣṣeḥ ara
+رمز|Code|Tangalt
+أنا لست روبوتًا|Je ne suis pas un robot|Ur ciɣ ara d aṛubuṭ
+قرأت وأوافق على|J'ai lu et j'accepte|Ɣriɣ u qebleɣ
+وافق على الشروط|Acceptez les conditions|Qbel tiwtilin
+الأمان|Sécurité|Aɣellsan
+الأمان وكلمة السر|Sécurité et mot de passe|Aɣellsan d wawal uffir
+تم حفظ الإعدادات|Paramètres enregistrés|Iɣewwaren ttwaskelsen
+تم حفظ بياناتك|Vos données sont enregistrées|Isefka-ik ttwaskelsen
+تم حفظ إعدادات المتجر|Paramètres de la boutique enregistrés|Iɣewwaren n tḥanut ttwaskelsen
+تم رفع|Téléversé|Yettwasali
+تم الرفع|Téléversé|Yettwasali
+فشل رفع الصورة|Échec de l'envoi de la photo|Tuzna n tewlaft ur teddi ara
+التقط صورة أو اختر من المعرض|Prenez une photo ou choisissez dans la galerie|Ṭṭef tawlaft neɣ fren seg tgalrit
+اختر صورة فقط|Choisissez uniquement une image|Fren kan tawlaft
+صورة غير صالحة|Image invalide|Tawlaft ur tṣeḥ ara
+أدخل رقم هاتف صحيح|Saisissez un numéro de téléphone valide|Sekcem uṭṭun n tilifun ameɣtu
+أدخل بريدا صحيحا|Saisissez un e-mail valide|Sekcem imayl ameɣtu
+أدخل بريدًا إلكترونيًا صحيحًا|Saisissez un e-mail valide|Sekcem imayl ameɣtu
+أدخل عنوانا واضحا|Saisissez une adresse claire|Sekcem tansa tafrawant
+أدخل الاسم والسعر|Saisissez le nom et le prix|Sekcem isem d uzal
+الاسم والهاتف مطلوبان|Nom et téléphone obligatoires|Isem d tilifun ilzem
+أكمل معلوماتك|Complétez vos informations|Fak talɣut-ik
+أكمل ملفّك كموصل|Complétez votre profil de livreur|Fak amaɣnu-ik n ulivrur
+تم إرسال ملفّك للإدارة|Profil envoyé à l'administration|Amaɣnu-ik yettwazen i usewway
+خطوة|Étape|Aswir
+الخطوة 1 من 2|Étape 1 sur 2|Aswir 1 seg 2
+الخطوة 2 من 2|Étape 2 sur 2|Aswir 2 seg 2
+عمولة المنصة|Commission de la plateforme|Tamuɣli n tsuddest
+العمولة والمناطق|Commission et zones|Tamuɣli d tmiwa
+إحصائيات المتجر|Statistiques de la boutique|Tisefka n tḥanut
+تقييمات المتجر|Avis sur la boutique|Isenqaden n tḥanut
+التقييمات|Avis|Isenqaden
+المخزون|Stock|Lǧerd
+الكريدي (دفتر المتجر)|Crédit (carnet de la boutique)|Lkridi (aḍris n tḥanut)
+كريدي|Crédit|Lkridi
+أكواد وعروض|Codes et offres|Tingalin d yisuraf
+خصومات المتجر|Réductions de la boutique|Isenqasen n tḥanut
+لا توجد منتجات|Aucun produit|Ulac iɣawsiwen
+لا توجد متاجر بعد|Aucune boutique pour l'instant|Ulac tiḥanutin ar tura
+لا يوجد متجر|Aucune boutique|Ulac taḥanut
+جديد التطبيق|Nouveautés|Ayen amaynut deg usnas
+ميزات جديدة|Nouvelles fonctionnalités|Timahilin timaynutin
+المزيد|Plus|Ugar
+الأخبار|Actualités|Isallen
+خدمة|Service|Lxedma
+المظهر والإشعارات|Apparence et notifications|Udem d yilɣuyen
+هذا الجهاز|Cet appareil|Allal-a
+الأجهزة المتصلة|Appareils connectés|Allalen yeqqnen
+الدخول بالبصمة / الوجه|Connexion par empreinte / visage|Anekcum s uḍaḍ / udem
+التحقق بخطوتين|Vérification en deux étapes|Asenqed s snat n tuɣalin
+اختياري|facultatif|ur yelzem ara
+الخادم|Serveur|Aqeddac
+بوڨاعة|Bougaa|Bougaa
+بوڨاعة والبلديات المجاورة|Bougaa et communes voisines|Bougaa d tmura i d-yezzin
+عين الكبيرة|Ain El Kebira|Ɛin Lkbira
+عين ولمان|Ain Oulmene|Ɛin Wulman
+عين عباسة|Ain Abessa|Ɛin Ɛabbasa
+بئر العرش|Bir El Arch|Bir Lɛarc
+قنزات|Guenzet|Qenzat
+بني ورثيلان|Beni Ouartilane|Ayt Wertilan
+المتابعة مع|Continuer avec|Kemmel s
+على|sur|ɣef
+الأحدث|Plus récents|Imaynuten
+بيع|Vente|Zzenz
+مميز|En vedette|Yettwafren
+رد|Répondre|Err
+رقم|N°|Uṭṭun
+قواعد وسلامة البيع|Règles et sécurité de vente|Ilugan d uɣellsan n uzenz
+منذ|il y a|seg
+منذ يومين|il y a 2 jours|seg sin n wussan
+منذ أسبوع|il y a une semaine|seg yiwen n ddurt
+نقل وتوصيل|Transport et livraison|Aẓẓuzer d usiweḍ
+خرائط|Cartes|Timwalin
+إعدادات|Paramètres|Iɣewwaren
+طلبات التسجيل|Demandes d'inscription|Isuturen n tjerrit
+إشعار جماعي|Notification groupée|Alɣu amatu
+مبرمج|Programmé|Yettwasɣiwes
+مراجعة|Vérification|Aleqqem
+ينتهي خلال|Se termine dans|Yemmed deg
+اطلب|Commander|Suter
+آخر|Dernier|Aneggaru
+سدّد|Régler|Xelṣ
+تذكير|Rappel|Asmekti
+وسط|Centre|Cinteṛ
+رفع|Téléverser|Sali
+استرجاع المبلغ|Remboursement|Tuɣalin n useqrar
+السجل التجاري|Registre de commerce|Aɣmis n tjaṛt
+البطاقة الرمادية|Carte grise|Takarṭa tagrayt
+أضف صورة واجهة متجرك|Ajoutez la photo de la façade|Rnu tawlaft n tneɣruft n tḥanut-ik
+تظهر للزبائن في الرئيسية|Visible pour les clients sur l'accueil|Tettwaẓer i yimsuturen deg ugejdan
+يظهر للزبائن زر مراسلتك مباشرة|Les clients voient un bouton pour vous écrire|Imsuturen ad walin tqeffalt akken ad k-ceggɛen
+الموقع غير مفعّل|Localisation désactivée|Adig ur yettwarmed ara
+بياناتي|Mes données|Isefka-inu
+والعمل|et travail|d uxeddim
+وضع ليلي وحجم الخط|Mode nuit et taille du texte|Askar n yiḍ d teɣzi n isekkilen
+تفعيل|Activer|Rmed
+فعّل|Activez|Rmed
+مفتاح|Clé|Tasarut
+بالصوت|à la voix|s ṣṣut
+الصورة|photo|tawlaft
+صوّر الورقة|Photographier la liste|Ṭṭef tawlaft n tebrat
+إعادة|Renouveler|Ɛawed
+توثيق الهاتف|Vérifier le téléphone|Sentem tilifun
+دفتر الكريدي|Carnet de crédit|Aḍris n lkridi
+فاتورة|Facture|Tafakturt
+للإدارة|à l'administration|i usewway
+اختر|Choisissez|Fren
+معلومات|Informations|Talɣut
+المعلومات|Informations|Talɣut
+نقطة دالة للتوصيل (اختياري)|Point de repère (facultatif)|Tamsit n usiweḍ (ur yelzem ara)
+عروض جديدة من متاجر بوقاعة هذا الأسبوع|Nouvelles offres des boutiques de Bougaa cette semaine|Isuraf imaynuten seg tiḥanutin n Bougaa ddurt-a
+هذا الأسبوع|cette semaine|ddurt-a
+أنا|Moi|Nekk
+نشاطي|Mon activité|Armud-inu
+تبديل نوع الحساب|Changer de type de compte|Beddel anaw n umiḍan
+النقاط والدعوات|Points et invitations|Tinqiḍin d tinubga
+نقاطك:|Vos points :|Tinqiḍin-ik:
+قيّم آخر طلب|Évaluer la dernière commande|Senqed asuter aneggaru
+آخر طلب|Dernière commande|Asuter aneggaru
+أضف|Ajouter|Rnu
+القسم|Rubrique|Aḥric
+تتم مراجعة إعلانك من الإدارة قبل نشره|Votre annonce est vérifiée avant publication|Tasnamekt-ik tettwaleqqem uqbel ad d-teffeɣ
+تتم مراجعة متجرك من الإدارة قبل ظهوره للزبائن|Votre boutique est vérifiée avant d'être visible|Taḥanut-ik tettwaleqqem uqbel ad tban i yimsuturen
+ما هو ممنوع نشره|Ce qui est interdit|Ayen yettwagdel
+ممنوع نشره|Interdit de publier|Yettwagdel ad yettwasuffeɣ
+اضغط|Appuyez|Ssed
+مشبوه|Suspect|Yettwaccekk
+مخالف|Non conforme|Yeɛdda ilugan
+اسأل عن الغرض|Se renseigner sur l'objet|Steqsi ɣef ugrus
+قدّم عرض سعر|Proposer un prix|Mudd azal
+تفاوض مع البائع|Négocier avec le vendeur|Mmeslay d umzenzi
+كيف أطلب من متجر؟|Comment commander ?|amek ara suteɣ seg tḥanut?
+كم تكلفة التوصيل؟|Combien coûte la livraison ?|Acḥal i yeswa usiweḍ?
+كيف أبيع غرضا مستعملا؟|Comment vendre un objet d'occasion ?|amek ara zzenzeɣ ayen yettwaseqdacen?
+كيف أفتح متجرا؟|Comment ouvrir une boutique ?|amek ara ldiɣ taḥanut?
+بريد إلكتروني|E-mail|Imayl
+نردّ خلال دقائق|Réponse en quelques minutes|Ad d-nerr deg tisdidin
+الإصدار|Version|Lqem
+نموذج تجريبي|Version d'essai|Lqem n usekyed
+بانتظار الموافقة|En attente d'approbation|Yettraju tamttant
+بانتظار المراجعة|En attente de vérification|Yettraju aleqqem
+تجار وموصلون|Commerçants et livreurs|Imzenzayen d ilivruren
+الخدمات والمزايا|Services et avantages|Tixeddimin d tmahilin
+للزبون|Pour le client|I umsuter
+للتاجر|Pour le commerçant|I umzenzi
+للموصل|Pour le livreur|I ulivrur
+سجل|Historique|Amazray
+ذكي|Intelligent|Ɣezzif
+فلاش|Flash|Flash
+دعوة|Invitation|Tinubga
+اكسب نقاطا وادعُ صديقا|Gagnez des points, invitez un ami|Ṭṭef tinqiḍin u ɛreḍ amdakkel
+ملاحظة|Note|Tazmilt
+وشكوى|et réclamation|d tuttra
+دعم|Support|Tallelt
+والتفعيل|et activation|d uremmed
+إحصائيات ومخزون|Statistiques et stock|Tisefka d lǧerd
+رد على الزبائن|Répondre aux clients|Err i yimsuturen
+ديون|Dettes|Ddyun
+طباعة وصل|Imprimer un reçu|Siggez tasuqqilt
+يومي وأسبوعي|Quotidien et hebdomadaire|Yal ass d yal ddurt
+مكافآت|Récompenses|Tiqbalin
+وثائق|Documents|Isemlalen
+لكل الفئات|Toutes catégories|I yal taggayt
+اضغط وتكلم|Appuyez et parlez|Ssed u mmeslay
+عروض تنتهي قريبا|Offres bientôt terminées|Isuraf ad ffmedden s zzreb
+فوق|au-dessus de|ufella n
+اطلب مرة أخرى بضغطة|Recommandez en un clic|Suter tikkelt-nniḍen s tussda
+أنت وصديقك تربحان|Vous et votre ami gagnez|Kečč d umdakkel-ik ad d-ṭṭfen
+تدفع للموصل نقدا عند وصول الطلب|Vous payez le livreur en espèces à la livraison|Tselkeḍ i ulivrur s yidrimen ticki yewweḍ asuter
+منتج ناقص أو تالف|Produit manquant ou abîmé|Aɣawsiw yenqes neɣ yexsar
+سعر مختلف|Prix différent|Azal yemgarad
+سلوك الموصل|Comportement du livreur|Tikli n ulivrur
+مبيعات الأسبوع|Ventes de la semaine|Izenzaten n ddurt
+مجموع الديون|Total des dettes|Amatu n ddyun
+تسجيل دين جديد|Nouvelle dette|Asekles n ddin amaynut
+طباعة الفاتورة|Imprimer la facture|Siggez tafakturt
+إرسالها للزبون|Envoyer au client|Azen-it i umsuter
+القرى المجاورة|Villages voisins|Tiddar i d-yezzin
+القرية المجاورة|Village voisin|Taddart i d-yezzin
+الافتراضي|Par défaut|Amezwer
+اجعله افتراضيا|Définir par défaut|Err-it d amezwer
+تحديث|Mise à jour|Aleqqem
+عند كل دخول من جهاز جديد|À chaque connexion depuis un nouvel appareil|Ticki tkecmeḍ seg allal amaynut
+بدل كلمة السر على هذا الجهاز|Mot de passe sur cet appareil|Awal uffir ɣef wallal-a
+نشط|Actif|Yettwaxdem
+راحة للعين في الليل|Confortable pour les yeux la nuit|Ɣef wallen deg yiḍ
+عمليات بحث سابقة|Recherches précédentes|Inadiyen yezrin
+مسح|Effacer|Sfeḍ
+الأكثر بحثا في بوقاعة|Les plus recherchés à Bougaa|Ayen i d-yettwanadin aṭas deg Bougaa
+سريع|Rapide|Arurad
+مهذب|Poli|Yelha
+أريد تغيير الطلب|Je veux modifier la commande|Bɣiɣ ad beddleɣ asuter
+كم يتأخر؟|Combien de retard ?|Acḥal i yettɛaṭṭil?
+وصل في الموعد|Arrivé à l'heure|Yewweḍ deg wakud
+في أقرب وقت|Au plus tôt|S zzreb
+خلال|dans|deg
+توصيل بدون تلامس|Livraison sans contact|Asiweḍ war amennuɣ
+يترك الموصل الطلب أمام الباب|Le livreur dépose devant la porte|Alivrur ad yeǧǧ asuter zdat n tewwurt
+فعّال|Actif|Yettwaxdem
+متوقف|Arrêté|Yeḥbes
+كود|Code|Tangalt
+إنشاء|Créer|Snulfu
+قيد المعالجة|En traitement|Yettwasmenyaf
+محظور|Bloqué|Yettwagdel
+رفع الحظر|Débloquer|Kkes ageddal
+حظر|Bloquer|Gdel
+نصائح السلامة|Conseils de sécurité|Iwellihen n uɣellsan
+قابل البائع في مكان عام نهارا|Rencontrez le vendeur dans un lieu public, de jour|Emlil d umzenzi deg wadig azayez deg wass
+المخالفات|Infractions|Tiɛeddayin
+غير مسجّل الدخول|Non connecté|Ur tekcimeḍ ara
+مفعّل|Activé|Yettwarmed
+قبل تفعيل حسابك|avant l'activation de votre compte|uqbel ad yettwarmed umiḍan-ik
+الصور تُحفظ في مخزن خاص، ولا يراها إلا أنت والإدارة|Les photos sont stockées en privé, visibles uniquement par vous et l'administration|Tiwlafin ttwaskelsent s tuffra, d kečč d usewway kan i ten-iwalin
+ما نوع رسالتك؟|Quel type de message ?|D acu anaw n yizen-ik?
+اقتراح|Suggestion|Asumer
+يُحذف حسابك وبياناتك نهائيا خلال 30 يوما|Votre compte et vos données sont supprimés définitivement sous 30 jours|Amiḍan-ik d isefka-ik ad ttwakksen i dayen deg 30 n wussan
+اختر طريقة استرجاع كلمة السر، وسنرسل لك رمز تحقق|Choisissez comment récupérer votre mot de passe, nous enverrons un code|Fren amek ara d-terreḍ awal uffir, ad k-nazen tangalt
+لتوصيل طلباتك بسرعة وبدقة|Pour livrer vos commandes vite et bien|I usiweḍ n yisuturen-ik s uɣurru
+وأطلب من متاجر بوڨاعة والبلديات المجاورة|et commandez dans les boutiques de Bougaa et voisines|u suter seg tiḥanutin n Bougaa d tmura i d-yezzin
+وابدأ البيع لزبائن بوڨاعة والبلديات المجاورة|et vendez aux clients de Bougaa et voisines|u bdu azenz i yimsuturen n Bougaa d tmura i d-yezzin
+اضغط «ابدأ» لتصلك طلبات التوصيل ويظهر اسمك للزبائن والتجار|Appuyez sur « Commencer » pour recevoir des livraisons|Ssed «Bdu» akken ad d-teṭṭfeḍ isuturen n usiweḍ
+اضغط على زر «الدخول» لتصلك الطلبات ويظهر اسمك للزبائن والتجار|Appuyez sur « Entrer » pour recevoir des commandes|Ssed «Kcem» akken ad d-teṭṭfeḍ isuturen
+تحدي الأسبوع|Défi de la semaine|Amtirni n ddurt
+أكمل 10 توصيلات واربح|Terminez 10 livraisons et gagnez|Fak 10 n yisiweḍen u rbeḥ
+الأكواد والعروض|Codes et offres|Tingalin d yisuraf
+حالة|État|Addad
+اعتماد|Valider|Sentem
+لم يحضر|Absent|Ur d-yusi ara
+ممنوع|Interdit|Yettwagdel
+أنت|Vous|Kečč`;
+const D={fr:{},am:{}};
+RAW.split('\n').forEach(l=>{const p=l.split('|');if(p.length==3){D.fr[p[0]]=p[1];D.am[p[0]]=p[2]}});
+const AR=/[\u0600-\u06FF]/;
+const rx={};
+function build(L){const ks=Object.keys(D[L]).sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+rx[L]=new RegExp('(?<![\\u0600-\\u06FF])('+ks.join('|')+')(?![\\u0600-\\u06FF])','g')}
+build('fr');build('am');
+function tr(s){const L=S.lang;if(L!='fr'&&L!='am'||!AR.test(s))return s;return s.replace(rx[L],m=>D[L][m]!==undefined?D[L][m]:m)}
+function walk(n){
+ if(n.nodeType==3){const v=n.nodeValue;if(AR.test(v)){const t=tr(v);if(t!==v)n.nodeValue=t}return}
+ if(n.nodeType!=1)return;
+ if(n.tagName=='SCRIPT'||n.tagName=='STYLE')return;
+ ['placeholder','title','aria-label'].forEach(a=>{const v=n.getAttribute&&n.getAttribute(a);if(v&&AR.test(v)){const t=tr(v);if(t!==v)n.setAttribute(a,t)}});
+ for(let c=n.firstChild;c;c=c.nextSibling)walk(c)}
+function dirApply(){const L=S.lang||'ar';const h=document.documentElement;h.lang=L=='am'?'kab':L;h.dir=L=='ar'?'rtl':'ltr'}
+let busy=false;
+function all(){dirApply();if(S.lang=='ar')return;busy=true;try{walk(document.body)}finally{busy=false}}
+const mo=new MutationObserver(ms=>{if(busy||S.lang=='ar')return;busy=true;try{ms.forEach(m=>{if(m.type=='characterData')walk(m.target);else m.addedNodes.forEach(walk)})}finally{busy=false}});
+mo.observe(document.body,{childList:true,subtree:true,characterData:true});
+try{const sv=localStorage.getItem('bg_lang');if(sv=='ar'||sv=='fr'||sv=='am')S.lang=sv}catch(e){}
+let last=S.lang;
+const _r35=render;render=function(){_r35();try{if(S.lang!=last){last=S.lang;try{localStorage.setItem('bg_lang',S.lang)}catch(e){}}}catch(e){}all()};
+dp0=function(){try{localStorage.setItem('bg_lang',S.lang)}catch(e){}last=S.lang;dirApply();$('#dp').innerHTML=dp();all();toast(S.lang=='ar'?'العربية':S.lang=='am'?'Tamaziɣt':'Français');render()};
+window.trI18n=tr;
+all();
+})();
+
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
