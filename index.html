@@ -1513,6 +1513,21 @@ all();
 h=h.replace(/<div style="padding:14px 20px 0"><div class="card row"[^>]*onclick="go\('used'\)">[\s\S]*?<\/span><\/div><\/div>(?=<div class="row" style="padding:16px 20px 0)/,'');
 h=h.replace('gap:12px 8px">','gap:12px 8px"><button class="cat" onclick="go(\'used\')"><i>'+ic('tag',30,'#0B4FB8',1.9)+'</i>سوق المستعمل</button>');
 return h}})();
+/* add38: chevrons « suivant » inverses en mode gauche-droite (fr/am) ; le bouton retour garde son sens */
+(function(){const st=document.createElement('style');st.textContent='html[dir=ltr] svg:not([width="26"]) path[d="M9 5l7 7-7 7"]{transform:scaleX(-1);transform-box:fill-box;transform-origin:center}';document.head.appendChild(st)})();
+/* add39: statut "ouvert" et "livraison" de la boutique enregistres dans Supabase (colonnes stores.is_open / stores.delivers) et visibles par les clients */
+(function(){
+const _sc=syncCatalog;
+syncCatalog=async function(){await _sc();
+ try{if(!(API.on()&&API.ses))return;const rows=await req('/rest/v1/stores?select=id,is_open,delivers&deleted_at=is.null');const m={};rows.forEach(r=>m[r.id]=r);
+  STORES.forEach(s=>{const r=s.sid&&m[s.sid];if(r){s.open=r.is_open;s.del=r.delivers;if(s.mine){S.sopen=r.is_open;S.sdel=r.delivers}}})}catch(e){}};
+const _tg=tg26;
+tg26=function(k){_tg(k);try{if(!SV())return;const s=STORES.find(x=>x.mine&&x.sid);if(!s)return;const b=k=='sopen'?{is_open:!!S.sopen}:{delivers:!!S.sdel};if(k=='sopen')s.open=!!S.sopen;else s.del=!!S.sdel;req('/rest/v1/stores?id=eq.'+s.sid,{m:'PATCH',b:b,h:{Prefer:'return=minimal'}}).catch(()=>toast('تعذر حفظ التغيير على الخادم'))}catch(e){}};
+const _c=storeCard;
+storeCard=function(s){let h=_c(s);if(s.open===false)h=h.replace(/(★ [^<]*· <b style="color:var\(--b\)">)[^<]*(<\/b>)/,'$1مغلق$2');if(s.del===false)h=h.replace('</b></div>','</b> · بدون توصيل</div>');return h};
+const _v=V.store;
+V.store=function(){let h=_v();const s=STORES.find(x=>x.id==S.store);if(s&&s.open===false)h=h.replace(/<span class="chip on"([^>]*)>مفتوح الآن<\/span>/,'<span class="chip"$1>مغلق الآن</span>');if(s&&s.del===false&&h.indexOf('بدون توصيل')<0)h=h.replace(/(<span class="chip[^"]*"[^>]*>مغلق الآن<\/span>|<span class="chip[^"]*"[^>]*>مفتوح الآن<\/span>)/,'$1<span class="chip" style="padding:2px 12px;font-size:12.5px;display:inline-block">استلام من المتجر فقط</span>');return h};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
