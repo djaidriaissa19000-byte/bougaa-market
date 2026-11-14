@@ -1,27 +1,3 @@
-/* add45: vraie carte OpenStreetMap (Leaflet), sans cle ni facturation */
-(function(){
-let _lf=null;
-function loadLF(){if(window.L&&L.map)return Promise.resolve();if(_lf)return _lf;_lf=new Promise((ok,no)=>{const l=document.createElement('link');l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(l);const s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.onload=()=>ok();s.onerror=()=>{_lf=null;no()};document.head.appendChild(s)});return _lf}
-const dot=(t,bg,sz)=>L.divIcon({className:'',html:'<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:'+bg+';border:3px solid #fff;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 6px rgba(0,0,0,.35)">'+(t||'')+'</div>',iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
-const base=(el,ctr,z)=>{const map=L.map(el,{zoomControl:true}).setView(ctr,z);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);setTimeout(()=>map.invalidateSize(),250);return map};
-function mk(el,c){if(el._lf)return;const ctr=(S.geo&&c.follow)?[S.geo.lat,S.geo.lng]:[c.ctr.lat,c.ctr.lng];const map=base(el,ctr,c.z||15);el._lf=map;
-(c.pts||[]).forEach(p=>L.marker([p.lat,p.lng],{icon:dot(p.l,p.k=='home'?'#083A8C':'#0B4FB8',28)}).addTo(map));
-if(c.route)L.polyline(c.route,{color:'#0B4FB8',weight:5}).addTo(map);
-if(c.me){const m=L.marker(S.geo?[S.geo.lat,S.geo.lng]:ctr,{icon:dot('','#4285F4',18),zIndexOffset:999}).addTo(map);el._me={setPosition:p=>m.setLatLng([p.lat,p.lng])};el._m={panTo:p=>map.panTo([p.lat,p.lng])}}}
-initMaps=function(){document.querySelectorAll('.gm').forEach(el=>{if(el.dataset.up)return;el.dataset.up=1;let c;try{c=JSON.parse(el.dataset.c)}catch(e){return}el._emb={};loadLF().then(()=>mk(el,c)).catch(()=>{el._emb=null;if(c.follow)buildEmbed(el)})})};
-/* suivi reel du livreur chez le client */
-const TR={};
-const live=()=>{const o=S.orders.find(x=>x.id==S.oid);return o&&o.sid&&o.st=='في الطريق'&&API.on()&&API.ses?o:null};
-function draw(){const el=document.getElementById('trkmap2'),o=live();if(!el||!o)return;const r=TR[o.sid],tx=document.getElementById('trktxt');
-if(!r||r.dlat==null){if(tx)tx.textContent='جارٍ تحديد موقع الموصل…';return}
-const age=Math.max(0,Math.round((Date.now()-new Date(r.dts).getTime())/1000));
-if(tx)tx.textContent=age>180?'موقع الموصل غير محدّث (قبل '+Math.round(age/60)+' د)':'موقع الموصل المباشر · قبل '+age+' ث';
-const p=[+r.dlat,+r.dlng];
-loadLF().then(()=>{if(!el._lf){el.innerHTML='';const map=base(el,p,15);el._lf=map;el._dm=L.marker(p,{icon:dot('🚚','#0B4FB8',36)}).addTo(map);if(r.slat!=null)L.marker([+r.slat,+r.slng],{icon:dot('م','#083A8C',28)}).addTo(map);if(S.geo)L.marker([S.geo.lat,S.geo.lng],{icon:dot('','#4285F4',18)}).addTo(map)}else{el._dm.setLatLng(p);el._lf.panTo(p)}}).catch(()=>{if(tx)tx.textContent='تعذّر تحميل الخريطة'})}
-async function poll(){const o=live();if(!o||S.scr!='track')return;try{const r=await req('/rest/v1/rpc/order_tracking',{m:'POST',b:{p_order:o.sid}});if(r)TR[o.sid]=r;draw()}catch(e){}}
-setInterval(poll,8000);
-const _t=V.track;V.track=function(){let h=_t();if(!live())return h;h=h.replace('id="trkmap"','id="trkmap2"');setTimeout(()=>{draw();poll()},120);return h};
-})();
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1586,6 +1562,30 @@ startGeo=function(){if(_gw!=null)return;if(!navigator.geolocation){S.geoSt='unsu
 const ok=p=>{S.geo={lat:p.coords.latitude,lng:p.coords.longitude,acc:Math.round(p.coords.accuracy)};S.geoSt='ok';geoUpd()};
 const bad=e=>{S.geoSt=e.code==1?'denied':(S.geo?'ok':'err');if(_gw!=null){try{navigator.geolocation.clearWatch(_gw)}catch(x){}}_gw=null;geoUpd()};
 _gw=navigator.geolocation.watchPosition(ok,e=>{if(e.code==1){bad(e);return}try{navigator.geolocation.clearWatch(_gw)}catch(x){}_gw=navigator.geolocation.watchPosition(ok,bad,{enableHighAccuracy:false,maximumAge:60000,timeout:30000})},{enableHighAccuracy:true,maximumAge:2000,timeout:12000})};
+/* add45: vraie carte OpenStreetMap (Leaflet), sans cle ni facturation */
+(function(){
+let _lf=null;
+function loadLF(){if(window.L&&L.map)return Promise.resolve();if(_lf)return _lf;_lf=new Promise((ok,no)=>{const l=document.createElement('link');l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(l);const s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.onload=()=>ok();s.onerror=()=>{_lf=null;no()};document.head.appendChild(s)});return _lf}
+const dot=(t,bg,sz)=>L.divIcon({className:'',html:'<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:'+bg+';border:3px solid #fff;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 6px rgba(0,0,0,.35)">'+(t||'')+'</div>',iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
+const base=(el,ctr,z)=>{const map=L.map(el,{zoomControl:true}).setView(ctr,z);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);setTimeout(()=>map.invalidateSize(),250);return map};
+function mk(el,c){if(el._lf)return;const ctr=(S.geo&&c.follow)?[S.geo.lat,S.geo.lng]:[c.ctr.lat,c.ctr.lng];const map=base(el,ctr,c.z||15);el._lf=map;
+(c.pts||[]).forEach(p=>L.marker([p.lat,p.lng],{icon:dot(p.l,p.k=='home'?'#083A8C':'#0B4FB8',28)}).addTo(map));
+if(c.route)L.polyline(c.route,{color:'#0B4FB8',weight:5}).addTo(map);
+if(c.me){const m=L.marker(S.geo?[S.geo.lat,S.geo.lng]:ctr,{icon:dot('','#4285F4',18),zIndexOffset:999}).addTo(map);el._me={setPosition:p=>m.setLatLng([p.lat,p.lng])};el._m={panTo:p=>map.panTo([p.lat,p.lng])}}}
+initMaps=function(){document.querySelectorAll('.gm').forEach(el=>{if(el.dataset.up)return;el.dataset.up=1;let c;try{c=JSON.parse(el.dataset.c)}catch(e){return}el._emb={};loadLF().then(()=>mk(el,c)).catch(()=>{el._emb=null;if(c.follow)buildEmbed(el)})})};
+/* suivi reel du livreur chez le client */
+const TR={};
+const live=()=>{const o=S.orders.find(x=>x.id==S.oid);return o&&o.sid&&o.st=='في الطريق'&&API.on()&&API.ses?o:null};
+function draw(){const el=document.getElementById('trkmap2'),o=live();if(!el||!o)return;const r=TR[o.sid],tx=document.getElementById('trktxt');
+if(!r||r.dlat==null){if(tx)tx.textContent='جارٍ تحديد موقع الموصل…';return}
+const age=Math.max(0,Math.round((Date.now()-new Date(r.dts).getTime())/1000));
+if(tx)tx.textContent=age>180?'موقع الموصل غير محدّث (قبل '+Math.round(age/60)+' د)':'موقع الموصل المباشر · قبل '+age+' ث';
+const p=[+r.dlat,+r.dlng];
+loadLF().then(()=>{if(!el._lf){el.innerHTML='';const map=base(el,p,15);el._lf=map;el._dm=L.marker(p,{icon:dot('🚚','#0B4FB8',36)}).addTo(map);if(r.slat!=null)L.marker([+r.slat,+r.slng],{icon:dot('م','#083A8C',28)}).addTo(map);if(S.geo)L.marker([S.geo.lat,S.geo.lng],{icon:dot('','#4285F4',18)}).addTo(map)}else{el._dm.setLatLng(p);el._lf.panTo(p)}}).catch(()=>{if(tx)tx.textContent='تعذّر تحميل الخريطة'})}
+async function poll(){const o=live();if(!o||S.scr!='track')return;try{const r=await req('/rest/v1/rpc/order_tracking',{m:'POST',b:{p_order:o.sid}});if(r)TR[o.sid]=r;draw()}catch(e){}}
+setInterval(poll,8000);
+const _t=V.track;V.track=function(){let h=_t();if(!live())return h;h=h.replace('id="trkmap"','id="trkmap2"');setTimeout(()=>{draw();poll()},120);return h};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
