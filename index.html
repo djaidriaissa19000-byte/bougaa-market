@@ -1508,6 +1508,11 @@ all();
 
 /* add36: supprime la 2e barre de recherche en double sur l'accueil */
 (function(){const st=document.createElement('style');st.textContent='#sbx{display:none!important}';document.head.appendChild(st)})();
+/* add37: "سوق المستعمل" devient la 1re icône des catégories (bannière supprimée) */
+(function(){const _h=V.home;V.home=function(){let h=_h();
+h=h.replace(/<div style="padding:14px 20px 0"><div class="card row"[^>]*onclick="go\('used'\)">[\s\S]*?<\/span><\/div><\/div>(?=<div class="row" style="padding:16px 20px 0)/,'');
+h=h.replace('gap:12px 8px">','gap:12px 8px"><button class="cat" onclick="go(\'used\')"><i>'+ic('tag',30,'#0B4FB8',1.9)+'</i>سوق المستعمل</button>');
+return h}})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
