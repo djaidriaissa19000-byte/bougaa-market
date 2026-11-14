@@ -1506,6 +1506,8 @@ window.trI18n=tr;
 all();
 })();
 
+/* add36: supprime la 2e barre de recherche en double sur l'accueil */
+(function(){const st=document.createElement('style');st.textContent='#sbx{display:none!important}';document.head.appendChild(st)})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
