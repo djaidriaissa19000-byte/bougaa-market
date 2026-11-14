@@ -1539,6 +1539,22 @@ const _n=fpNew;fpNew=async function(){if(!em())return _n();const a=$('#fn1').val
 window.fpResend=async function(){try{await req('/auth/v1/recover',{m:'POST',b:{email:S.fp.c}});toast('أُرسل رمز جديد ✓')}catch(e){toast(errAr(e))}};
 const _f=V.forgot;V.forgot=function(){let h=_f();if(!(API.on()&&S.fp&&S.fp.m=='email'))return h;return h.replace(/<br><span style="font-size:12\.5px">\(نموذج تجريبي[^<]*<\/span>/,'').replace("onclick=\"toast('تم إرسال رمز جديد')\"",'onclick="fpResend()"')};
 })();
+/* add42: suivi GPS reel du livreur sur la carte du client */
+(function(){
+const TRK={};let _gm=null;
+const live=()=>{const o=S.orders.find(x=>x.id==S.oid);return o&&o.sid&&o.st=='في الطريق'&&API.on()&&API.ses?o:null};
+function drawT(){const el=document.getElementById('trkmap');if(!el)return;const o=live();if(!o)return;const r=TRK[o.sid],tx=document.getElementById('trktxt');
+ if(!r||r.dlat==null){if(tx)tx.textContent='جارٍ تحديد موقع الموصل…';return}
+ const age=Math.max(0,Math.round((Date.now()-new Date(r.dts).getTime())/1000));
+ if(tx)tx.textContent=age>180?'موقع الموصل غير محدّث (قبل '+Math.round(age/60)+' د)':'موقع الموصل المباشر · قبل '+age+' ث';
+ const p={lat:+r.dlat,lng:+r.dlng};
+ if(S.gkey&&window.google&&google.maps){if(!el._m||el._g!==el){el.innerHTML='';el._g=el;el._m=new google.maps.Map(el,{center:p,zoom:15,disableDefaultUI:true,zoomControl:true,gestureHandling:'greedy'});el._d=new google.maps.Marker({position:p,map:el._m,label:{text:'🚚',fontSize:'16px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:16,fillColor:'#0B4FB8',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});if(r.slat!=null)new google.maps.Marker({position:{lat:+r.slat,lng:+r.slng},map:el._m,label:{text:'م',color:'#fff',fontWeight:'700'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#083A8C',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});if(S.geo)new google.maps.Marker({position:{lat:S.geo.lat,lng:S.geo.lng},map:el._m,icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:'#4285F4',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}})}else{el._d.setPosition(p);el._m.panTo(p)}}
+ else if(S.gkey&&!(window.google&&google.maps)){loadGM().then(drawT).catch(()=>{})}
+ else{const src='https://www.google.com/maps?q='+p.lat+','+p.lng+'&z=16&output=embed&hl=ar';let f=el.querySelector('iframe');if(!f){f=document.createElement('iframe');f.style.cssText='border:0;width:100%;height:100%;display:block';f.setAttribute('loading','lazy');el.appendChild(f)}if(f.dataset.s!=src){f.dataset.s=src;f.src=src}}}
+async function poll(){const o=live();if(!o||S.scr!='track')return;try{const r=await req('/rest/v1/rpc/order_tracking',{m:'POST',b:{p_order:o.sid}});if(r)TRK[o.sid]=r;drawT()}catch(e){}}
+setInterval(poll,8000);
+const _t=V.track;V.track=function(){let h=_t();const o=live();if(!o)return h;h=h.replace(/<div class="gm"[^>]*><\/div>/,'<div id="trkmap" style="position:absolute;inset:0;background:#E3EFFF"></div>');h=h.replace('<div style="position:absolute;z-index:2;bottom:10px','<div id="trktxt" style="position:absolute;z-index:3;top:10px;inset-inline-start:10px;background:#fff;padding:6px 12px;font-weight:900;font-size:12.5px;color:var(--b)">جارٍ تحديد موقع الموصل…</div><div style="position:absolute;z-index:2;bottom:10px');setTimeout(()=>{drawT();poll()},60);return h};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
