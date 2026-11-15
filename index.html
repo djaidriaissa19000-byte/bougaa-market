@@ -1634,6 +1634,12 @@ if(typeof syncAdmin=='function'){const f=syncAdmin;syncAdmin=async function(){co
 window.adPic=function(u,el){const b=document.getElementById('adbig');if(b)b.src=u;document.querySelectorAll('#adstrip>div').forEach(d=>d.style.outline='');if(el)el.style.outline='2px solid var(--b)'};
 const _a=V.ad;V.ad=function(){let h=_a();const a=[].concat(S.aprov||[],S.ads||[],S.uads||[]).find(x=>x.id==S.aid);if(!a||!a.imgs||a.imgs.length<2)return h;const k=h.indexOf('<img src="');if(k<0)return h;h=h.slice(0,k)+'<img id="adbig" src="'+h.slice(k+10);const e=h.indexOf('<div style="padding:');if(e<0)return h;const strip='<div id="adstrip" style="display:flex;gap:6px;padding:8px 20px 0;overflow-x:auto">'+a.imgs.map((u,i)=>`<div onclick="adPic('${u}',this)" style="flex:none;width:56px;height:56px;background:#EAF2FF url(${u}) center/cover no-repeat;cursor:pointer;${i==0?'outline:2px solid var(--b)':''}"></div>`).join('')+'</div>';return h.slice(0,e)+strip+h.slice(e)};
 })();
+/* add51: grande case d'ajout de photo conservée ; miniatures (jusqu'à 10) en dessous */
+(function(){
+const T={ar:'أضف صور الغرض',fr:"Ajouter des photos de l'objet",am:'Rnu tugniwin'};
+const st=document.createElement('style');st.textContent='#gal>div[onclick*="gif"]{display:none!important}#gal{margin-top:8px}#gal:not(:has(div[style*="url("])){margin-top:0}';document.head.appendChild(st);
+const _s=V.sell;V.sell=function(){const h=_s();const k=h.indexOf('<div id="gal"');if(k<0)return h;return h.slice(0,k)+`<div onclick="$('#gif').click()" style="height:110px;border:2px dashed var(--s);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--b);font-weight:700;cursor:pointer">${ic('cam',32,'#0B4FB8')}<span>${T[S.lang]||T.ar}</span></div>`+h.slice(k)};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
