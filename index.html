@@ -1867,6 +1867,11 @@ const _r=render;render=function(){_r();try{if(S.scr!='cats')return;const sc=docu
 if(grid)grid.style.display=k=='s'?'':'none';if(rb)rb.style.display=k=='r'?'':'none';
 const d=document.createElement('div');d.id='tb67';d.className='tb67';d.innerHTML=`<b class="${k=='s'?'on':''}" onclick="ct67('s')">${t('sh')}</b><b class="${k=='r'?'on':''}" onclick="ct67('r')">${t('pr')}</b>`;if(top)top.after(d)}catch(e){}};
 })();
+/* add69: retour de connexion Google/Facebook — écran « Connexion en cours… » au lieu de l'écran de démarrage */
+(function(){const h=location.hash||'';if(!(API.on()&&/[#&](access_token|error)=/.test(h)))return;
+V.oa68=()=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-height:100%"><img src="bougaa-logo-blue.webp" style="width:84px" alt=""><div style="font-weight:700;color:var(--b);font-size:16px">${S.lang=='ar'?'جاري تسجيل الدخول…':'Connexion en cours…'}</div></div>`;
+S.scr='oa68';
+setTimeout(()=>{if(S.scr=='oa68')go('login',{role:'client'})},8000)})();
 /* add68: vraie connexion Google / Facebook via Supabase (OAuth) — remplace les boutons de démonstration ; réservé aux comptes clients */
 (function(){
 const RU='https://djaidriaissa19000-byte.github.io/bougaa-market/';
