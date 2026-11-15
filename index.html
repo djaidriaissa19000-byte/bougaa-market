@@ -1603,6 +1603,13 @@ document.addEventListener('input',e=>{const t=e.target;if(t.id!='rw'&&t.id!='fn1
 })();
 /* add48: champs remplis automatiquement par le navigateur — même fond blanc que la case */
 (function(){const st=document.createElement('style');st.textContent='input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus,input:-webkit-autofill:active{-webkit-box-shadow:0 0 0 100px #fff inset!important;box-shadow:0 0 0 100px #fff inset!important;-webkit-text-fill-color:#083A8C!important;caret-color:#083A8C;transition:background-color 99999s}input:autofill{box-shadow:0 0 0 100px #fff inset!important}';document.head.appendChild(st)})();
+/* add49: acceptation des conditions sur une seule ligne */
+(function(){
+const TX={fr:["J'accepte les ","Conditions"," et la ","Confidentialité"],am:["Qebleɣ ","Tiwtilin"," d ","Tudert tuffirt"]};
+function fix(){const c=document.getElementById('tc');if(!c)return;const sp=c.parentElement.querySelector('span');if(!sp||sp.dataset.one)return;sp.dataset.one=1;const b=sp.querySelectorAll('b');const t=TX[S.lang];if(t&&b.length==2){[...sp.childNodes].forEach(n=>{if(n.nodeType==3)n.remove()});b[0].textContent=t[1];b[1].textContent=t[3];sp.insertBefore(document.createTextNode(t[0]),b[0]);sp.insertBefore(document.createTextNode(t[2]),b[1])}
+sp.style.whiteSpace='nowrap';sp.style.flex='1';sp.style.minWidth='0';sp.style.textAlign='start';let f=12.5;while(sp.scrollWidth>sp.clientWidth+1&&f>10){f-=.5;sp.style.fontSize=f+'px'}}
+const _r=render;render=function(){_r();try{fix()}catch(e){}};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
