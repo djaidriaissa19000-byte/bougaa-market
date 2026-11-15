@@ -1671,6 +1671,13 @@ function blk(id){const e=document.getElementById(id);if(!e)return null;let r=e;w
 function fix(){if(S.scr!='sell')return;const a=blk('sc'),b=blk('st');if(!a||!b||a[0].parentElement!==b[0].parentElement)return;if(a[0].compareDocumentPosition(b[0])&Node.DOCUMENT_POSITION_PRECEDING){b[0].before(a[0],a[1])}}
 const _r=render;render=function(){_r();try{fix()}catch(e){}};
 })();
+/* add55: état « neuf sous emballage » pour les annonces d'occasion */
+(function(){
+const K='جديد في العلبة',TX={fr:'Neuf sous emballage',am:'Amaynut deg tbewwaḍt'};
+function chip(){if(S.scr!='sell')return;const c=[...document.querySelectorAll('#scr span.chip[onclick]')].find(e=>e.getAttribute('onclick').includes('S.sell.cond='));if(!c)return;const row=c.parentElement;if(row.querySelector('[data-nw]'))return;row.style.flexWrap='wrap';row.style.rowGap='8px';row.insertAdjacentHTML('afterbegin',`<span data-nw="1" class="chip ${S.sell.cond==K?'on':''}" onclick="S.sell.cond='${K}';keep();render()">${K}</span>`)}
+function tr(){const t=TX[S.lang];if(!t)return;const w=document.createTreeWalker(document.getElementById('scr')||document.body,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode())){if(n.nodeValue.includes(K))n.nodeValue=n.nodeValue.split(K).join(t)}}
+const _r=render;render=function(){_r();try{chip();tr()}catch(e){}};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
