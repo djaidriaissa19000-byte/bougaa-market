@@ -1774,6 +1774,20 @@ const _p=pub;pub=async function(){if(S.scr!='sell')return _p.apply(this,argument
 const _sc=syncCatalog;syncCatalog=async function(){const x=await _sc.apply(this,arguments);try{if(API.on()){(await _q('/rest/v1/products?select=id,price_type,delivery&deleted_at=is.null&limit=1000')).forEach(r=>PX[r.id]=r)}}catch(e){}return x};
 if(typeof syncListings=='function'){const f=syncListings;syncListings=async function(){const x=await f.apply(this,arguments);try{const m={};(await _q('/rest/v1/listings?select=id,price_type&deleted_at=is.null&order=created_at.desc&limit=200')).forEach(r=>m[r.id]=r.price_type);[S.aprov,S.ads,S.uads].forEach(l=>(l||[]).forEach(a=>{if(a.sid&&m[a.sid])a.pt=m[a.sid]}))}catch(e){}return x}}
 })();
+/* add62: nouvelle présentation — interrupteurs (prix négociable, livraison), contacts en cases normales, ordre : rubrique, nom, photos, prix */
+(function(){
+const T={ng:{ar:'السعر قابل للتفاوض',fr:'Prix négociable',am:'Ssuma tettwanaqac'},dl:{ar:'التوصيل متوفر',fr:'Livraison disponible',am:'Asiweḍ yella'},ct:{ar:'أرقام التواصل (تظهر للزبائن)',fr:'Numéros de contact (affichés aux clients)',am:'Numéros de contact'},tel:{ar:'الهاتف',fr:'Téléphone',am:'Tiliɣri'}};
+const t=k=>T[k][S.lang]||T[k].ar;
+const st=document.createElement('style');st.textContent='#b61,#shc{display:none!important}.sw62{width:46px;height:26px;background:#C9D3E3;position:relative;flex:none}.sw62:after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:20px;height:20px;background:#fff;transition:inset-inline-start .15s}.sw62.on{background:var(--b)}.sw62.on:after{inset-inline-start:23px}.r62{border:1px solid var(--br);background:#fff;padding:0 12px;min-height:50px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;margin-top:10px;font-weight:600;color:var(--n)}';document.head.appendChild(st);
+const sw=(on,txt,js)=>`<div class="r62" onclick="${js}"><span>${txt}</span><span class="sw62 ${on?'on':''}"></span></div>`;
+function block(shop){const ng=S.sell.pt=='negotiable',dl=S.sell.dl!==0;return `<div id="b62">${sw(ng,t('ng'),"f62('pt')")}${shop?sw(dl,t('dl'),"f62('dl')"):''}</div>`}
+window.f62=function(k){if(k=='pt')S.sell.pt=S.sell.pt=='negotiable'?'fixed':'negotiable';else S.sell.dl=S.sell.dl===0?1:0;const b=document.getElementById('b62');if(b)b.outerHTML=block(!!document.getElementById('shc'))};
+function form(){if(S.scr!='sell')return;const sp=document.getElementById('sp');if(!sp||document.getElementById('b62'))return;const sh=document.getElementById('shc');const prow=sp.closest('.row')||sp;prow.insertAdjacentHTML('afterend',block(!!sh));if(!sh)return;
+const b62=document.getElementById('b62');const cv=S.sell.cv||(S.sell.cv={});const proto=prow.cloneNode(true);const mk=(k,lab,icon)=>{const l=document.createElement('label');l.textContent=lab;const r=proto.cloneNode(true);const i=r.querySelector('input');i.id='c62'+k;i.removeAttribute('inputmode');i.setAttribute('inputmode','tel');i.dir='ltr';i.maxLength=10;i.placeholder='0555123456';i.value=cv[k]||'';i.oninput=function(){S.sell.cv[k]=this.value.trim()};const sp0=r.querySelector('span');if(sp0&&icon)sp0.innerHTML=icon;return [l,r]};
+const h=document.createElement('div');h.id='c62';const ttl=document.createElement('div');ttl.style.cssText='margin-top:16px;font-weight:700;color:var(--n);font-size:14px';ttl.textContent=t('ct');h.append(ttl,...mk('phone',t('tel'),ic('call',22,'#0B4FB8')),...mk('whatsapp','WhatsApp',ic('chat',22,'#1FA855')),...mk('viber','Viber',ic('chat',22,'#7360F2')));b62.after(h);
+const stI=document.getElementById('st'),gal=document.getElementById('gal'),gif=document.getElementById('gif');if(stI&&gal){const nrow=stI.closest('.row')||stI;const big=gal.previousElementSibling,lb=big&&big.previousElementSibling;const nodes=[lb,big,gal,gif].filter(Boolean);if(lb&&lb.tagName=='LABEL'&&(lb.compareDocumentPosition(nrow)&Node.DOCUMENT_POSITION_FOLLOWING)){nrow.after(...nodes)}}}
+const _r=render;render=function(){_r();try{form()}catch(e){}};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
