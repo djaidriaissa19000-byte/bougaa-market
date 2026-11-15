@@ -1788,6 +1788,27 @@ const h=document.createElement('div');h.id='c62';const ttl=document.createElemen
 }
 const _r=render;render=function(){_r();try{form()}catch(e){}};
 })();
+/* add63: menu latéral façon Ouedkniss — mode sombre, compte, boutiques, catégories du marché d'occasion, liens utiles */
+(function(){
+const L={dark:['الوضع الليلي','Mode sombre'],acc:['الحساب','Compte'],login:['تسجيل الدخول','Se connecter'],reg:['إنشاء حساب','Créer un compte'],me:['حسابي','Mon compte'],ord:['طلباتي','Mes commandes'],fav:['المفضلة','Favoris'],add:['إضافة إعلان','Ajouter une annonce'],shops:['المتاجر','Boutiques'],allsh:['كل المتاجر','Toutes les boutiques'],used:['سوق المستعمل','Marché d\'occasion'],all:['كل الإعلانات','Toutes les annonces'],links:['روابط مفيدة','Liens utiles'],mk:['إنشاء متجر','Créer une boutique'],help:['المساعدة','Aide'],legal:['الشروط والخصوصية','Conditions et confidentialité'],roles:['تبديل نوع الحساب','Changer de type de compte']};
+const t=k=>S.lang=='ar'?L[k][0]:L[k][1];
+const CA=['مواد غذائية','ملابس و موضة','هواتف و أكسسوارات','إعلام آلي','أجهزة إلكترونية و كهرومنزلية','أثاث و منزل','قطع غيار','تسلية و ترفيه','خدمات','صحة و جمال','معدات و مواد','رياضة','عروض و طلبات العمل','عقارات','سياحة و سفر','أخرى'];
+const CF=['Alimentaires','Vêtements et mode','Téléphones et accessoires','Informatique','Électronique et électroménager','Meubles et maison','Pièces détachées','Loisirs et divertissements','Services','Santé et beauté','Matériaux et équipement','Sport','Emploi (offres et demandes)','Immobilier','Voyages','Autres'];
+const EM=['🍎','👕','📱','💻','📺','🛋️','🔧','🎮','🛠️','💄','🧱','⚽','💼','🏠','✈️','📦'];
+const row=(ico,txt,js)=>`<button class="mi" onclick="${js}"><i>${ico}</i>${txt}</button>`;
+const em=x=>`<span style="font-size:20px;line-height:1">${x}</span>`;
+const sec=x=>`<div style="padding:16px 18px 6px;font-size:13px;font-weight:700;color:var(--t)">${x}</div>`;
+window.dk63=function(){S.dark=!S.dark;render();$('#dp').innerHTML=dp()};
+window.u63=function(i){S.ucf=i<0?'الكل':CA[i];S.usf='';S.usfc='';go('used')};
+dp=function(){const g=!!S.guest,ac=g?row(ic('user',20,'#0B4FB8'),t('login'),"go('login',{role:'client',guest:0})")+row(ic('plus',20,'#0B4FB8'),t('reg'),"go('regc',{role:'client',guest:0})"):row(ic('user',20,'#0B4FB8'),t('me'),"mn('account')")+row(ic('box',20,'#0B4FB8'),t('ord'),"mn('orders')")+row(ic('heart',20,'#0B4FB8'),t('fav'),"mn('favs')");
+return `<div style="height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--br);flex:none"><div class="row" style="gap:16px">${['ar:عربية','am:الأمازيغية','fr:Français'].map(x=>{const[a,b]=x.split(':');return `<span onclick="S.lang='${a}';dp0()" style="font-weight:${S.lang==a?900:700};color:${S.lang==a?'var(--b)':'var(--t)'};${S.lang==a?'border-bottom:3px solid var(--b)':''};cursor:pointer">${b}</span>`}).join('')}</div><span onclick="drawer(0)" style="cursor:pointer">${ic('close',26,'#083A8C',2.4)}</span></div>`
++`<div class="mi" onclick="dk63()" style="cursor:pointer"><i>${ic('eye',20,'#0B4FB8')}</i><span style="flex:1">${t('dark')}</span><span class="sw62 ${S.dark?'on':''}"></span></div>`
++sec(t('acc'))+ac+row(ic('plus',20,'#0B4FB8'),t('add'),"mn('sell')")
++sec(t('shops'))+row(ic('shop',20,'#0B4FB8'),t('allsh'),"mn('cats')")+CATS.slice(0,7).map(c=>row(ic(c[0],20,'#0B4FB8',1.9),c[1],`mn('cat:${c[0]}')`)).join('')
++sec(t('used'))+row(em('🏷️'),t('all'),'u63(-1)')+CA.map((a,i)=>row(em(EM[i]),S.lang=='ar'?a:CF[i],`u63(${i})`)).join('')
++sec(t('links'))+row(ic('shop',20,'#0B4FB8'),t('mk'),"mn('regma')")+row(ic('help',20,'#0B4FB8'),t('help'),"mn('help')")+row(ic('doc',20,'#0B4FB8'),t('legal'),"go('legal',{lt:0,lback:'home'})")+row(ic('out',20,'#0B4FB8'),t('roles'),"mn('roles')")
++`<div style="padding:10px 18px 18px;text-align:center;font-size:12px;color:var(--t);cursor:pointer" onclick="mn('admin')">لوحة الإدارة (نموذج)</div>`};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
