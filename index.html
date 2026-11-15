@@ -1648,6 +1648,23 @@ const _p=window.galPick;window.galPick=async function(f){await _p(f);deco()};
 const _d=window.galDel;window.galDel=function(i){_d(i);deco()};
 const _r=render;render=function(){_r();if(S.scr=='sell')deco()};
 })();
+/* add53: clic sur une photo = affichage en grand, avec pivoter / couverture / supprimer */
+(function(){
+const T={rot:{ar:'تدوير',fr:'Pivoter',am:'Zzi'},del:{ar:'حذف',fr:'Supprimer',am:'Kkes'},cov:{ar:'صورة رئيسية',fr:'Couverture',am:'Tamezwarut'},cls:{ar:'إغلاق',fr:'Fermer',am:'Mdel'}};
+const t=k=>T[k][S.lang]||T[k].ar;
+const st=document.createElement('style');st.textContent='#gal>div>span[onclick]{display:none!important}#gal>div{cursor:pointer}#pv{position:fixed;inset:0;z-index:9999;background:rgba(4,20,50,.96);display:flex;flex-direction:column}#pv .tp{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;color:#fff;font-weight:700}#pv .md{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 6px}#pv img{max-width:100%;max-height:100%;object-fit:contain;flex:1;min-width:0}#pv .nv{flex:none;width:38px;height:54px;background:rgba(255,255,255,.15);color:#fff;border:0;font-size:26px;cursor:pointer}#pv .bt{display:flex;gap:8px;padding:12px 14px 18px}#pv .bt button{flex:1;height:48px;border:0;font:inherit;font-weight:700;font-size:14px;cursor:pointer;background:#fff;color:#083A8C}#pv .bt .dl{background:#B42318;color:#fff}#pv .x{background:none;border:0;color:#fff;font:inherit;font-weight:700;cursor:pointer;font-size:15px}';document.head.appendChild(st);
+let cur=0;
+function close(){const p=document.getElementById('pv');if(p)p.remove()}
+function show(){if(!window.GAL||!GAL.length)return close();if(cur>=GAL.length)cur=GAL.length-1;if(cur<0)cur=0;let p=document.getElementById('pv');if(!p){p=document.createElement('div');p.id='pv';p.dir='ltr';document.body.appendChild(p)}
+p.innerHTML=`<div class="tp"><span>${cur+1} / ${GAL.length}</span><button class="x" onclick="pvDo('x')">✕ ${t('cls')}</button></div><div class="md"><button class="nv" onclick="pvDo('p')" style="${GAL.length>1?'':'visibility:hidden'}">‹</button><img src="${GAL[cur]}"><button class="nv" onclick="pvDo('n')" style="${GAL.length>1?'':'visibility:hidden'}">›</button></div><div class="bt"><button onclick="pvDo('r')">↻ ${t('rot')}</button>${cur>0?`<button onclick="pvDo('c')">★ ${t('cov')}</button>`:''}<button class="dl" onclick="pvDo('d')">${t('del')}</button></div>`}
+function redraw(){galDel(GAL.length)}
+window.pvDo=function(a){if(a=='x')return close();if(a=='p'){cur=(cur-1+GAL.length)%GAL.length;return show()}if(a=='n'){cur=(cur+1)%GAL.length;return show()}
+if(a=='d'){galDel(cur);return show()}
+if(a=='c'){GAL.unshift(GAL.splice(cur,1)[0]);cur=0;redraw();return show()}
+if(a=='r'){const old=GAL[cur],i=cur;galRot(i);let n=0;const w=setInterval(()=>{if(GAL[i]!==old||++n>40){clearInterval(w);if(cur==i)show()}},50)}};
+document.addEventListener('click',e=>{const d=e.target.closest&&e.target.closest('#gal>div');if(!d||!window.GAL)return;const i=[...d.parentElement.children].indexOf(d);if(i<0||i>=GAL.length)return;cur=i;show()});
+const _g=go;go=function(){close();return _g.apply(this,arguments)};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
