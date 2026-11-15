@@ -1678,6 +1678,12 @@ function chip(){if(S.scr!='sell')return;const c=[...document.querySelectorAll('#
 function tr(){const t=TX[S.lang];if(!t)return;const w=document.createTreeWalker(document.getElementById('scr')||document.body,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode())){if(n.nodeValue.includes(K))n.nodeValue=n.nodeValue.split(K).join(t)}}
 const _r=render;render=function(){_r();try{chip();tr()}catch(e){}};
 })();
+/* add56: l'état de l'objet en liste déroulante, comme la rubrique */
+(function(){
+const K='جديد في العلبة',TX={fr:'Neuf sous emballage',am:'Amaynut deg tbewwaḍt'},OPS=[K,'شبه جديد','جيد','مقبول'];
+function fix(){if(S.scr!='sell'||document.getElementById('sd'))return;const sc=document.getElementById('sc');const c=[...document.querySelectorAll('#scr span.chip[onclick]')].find(e=>e.getAttribute('onclick').includes('S.sell.cond='));if(!sc||!c)return;const chips=c.parentElement,src=sc.closest('.row')||sc;const box=src.cloneNode(true);const old=box.id=='sc'?box:box.querySelector('#sc');const sel=document.createElement('select');sel.id='sd';sel.style.cssText=sc.style.cssText;sel.className=sc.className;if(!OPS.includes(S.sell.cond))S.sell.cond='جيد';OPS.forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent=(o==K&&TX[S.lang])||o;if(S.sell.cond==o)op.selected=true;sel.appendChild(op)});sel.onchange=function(){S.sell.cond=this.value;if(typeof keep=='function')keep()};if(old===box){chips.replaceWith(sel)}else{old.replaceWith(sel);chips.replaceWith(box)}}
+const _r=render;render=function(){_r();try{fix()}catch(e){}};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
