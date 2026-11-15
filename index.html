@@ -1684,6 +1684,19 @@ const K='جديد في العلبة',TX={fr:'Neuf sous emballage',am:'Amaynut de
 function fix(){if(S.scr!='sell'||document.getElementById('sd'))return;const sc=document.getElementById('sc');const c=[...document.querySelectorAll('#scr span.chip[onclick]')].find(e=>e.getAttribute('onclick').includes('S.sell.cond='));if(!sc||!c)return;const chips=c.parentElement,src=sc.closest('.row')||sc;const box=src.cloneNode(true);const old=box.id=='sc'?box:box.querySelector('#sc');const sel=document.createElement('select');sel.id='sd';sel.style.cssText=sc.style.cssText;sel.className=sc.className;if(!OPS.includes(S.sell.cond))S.sell.cond='جيد';OPS.forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent=(o==K&&TX[S.lang])||o;if(S.sell.cond==o)op.selected=true;sel.appendChild(op)});sel.onchange=function(){S.sell.cond=this.value;if(typeof keep=='function')keep()};if(old===box){chips.replaceWith(sel)}else{old.replaceWith(sel);chips.replaceWith(box)}}
 const _r=render;render=function(){_r();try{fix()}catch(e){}};
 })();
+/* add57: rubriques du marché d'occasion reprises d'Ouedkniss (16 rubriques + Autres) */
+(function(){
+const C=[['عقارات','Immobilier'],['سيارات و مركبات','Automobiles et véhicules'],['قطع غيار','Pièces détachées'],['هواتف و أكسسوارات','Téléphones et accessoires'],['إعلام آلي','Informatique'],['أجهزة إلكترونية و كهرومنزلية','Électronique et électroménager'],['ملابس و موضة','Vêtements et mode'],['صحة و جمال','Santé et beauté'],['أثاث و منزل','Meubles et maison'],['تسلية و ترفيه','Loisirs et divertissements'],['رياضة','Sport'],['عروض و طلبات العمل','Emploi (offres et demandes)'],['معدات و مواد','Matériaux et équipement'],['مواد غذائية','Alimentaires'],['سياحة و سفر','Voyages'],['خدمات','Services'],['أخرى','Autres']];
+const OLD={'أجهزة':'أجهزة إلكترونية و كهرومنزلية','هواتف':'هواتف و أكسسوارات','أثاث':'أثاث و منزل','ملابس':'ملابس و موضة','سيارات ومركبات':'سيارات و مركبات'};
+const AR=C.map(x=>x[0]),FR=C.map(x=>x[1]),toFr={},toAr={};C.forEach(x=>{toFr[x[0]]=x[1];toAr[x[1]]=x[0]});
+UC.length=0;AR.forEach(x=>UC.push(x));
+const lists=()=>[S.uads,S.aprov,S.ads].filter(Boolean);
+function norm(){lists().forEach(l=>l.forEach(a=>{if(a&&a.c){if(toAr[a.c])a.c=toAr[a.c];if(OLD[a.c])a.c=OLD[a.c]}}))}
+const _r=render;render=function(){norm();const fr=S.lang!='ar';const all=fr?FR:AR;if(S.ucf&&S.ucf!='الكل'&&!all.includes(S.ucf))S.ucf=(fr?toFr[S.ucf]:toAr[S.ucf])||'الكل';
+if(!fr)return _r();
+UC.length=0;FR.forEach(x=>UC.push(x));lists().forEach(l=>l.forEach(a=>{if(a&&toFr[a.c])a.c=toFr[a.c]}));
+try{return _r()}finally{UC.length=0;AR.forEach(x=>UC.push(x));norm()}};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
