@@ -1853,6 +1853,20 @@ if(m<0)return h;const b=h.lastIndexOf('<div style="padding:16px 18px 6px',m);if(
 return h.slice(0,b)+`<div style="padding:16px 18px 6px;font-size:13px;font-weight:700;color:var(--t)">${t('ttl')}</div>`+list()+h.slice(b)};
 const _r=render;render=function(){_r();try{if(S.scr=='cats'){const sc=document.getElementById('scr');if(sc&&!document.getElementById('rb66')){const d=document.createElement('div');d.id='rb66';d.style.cssText='padding:0 0 24px';d.innerHTML=`<div style="padding:6px 20px 6px;font-size:13px;font-weight:700;color:var(--t)">${t('ttl')}</div>`+list();const w=sc.querySelector('.fade');(w||sc).appendChild(d)}}}catch(e){}};
 })();
+/* add67: simplification — menu court (4 rubriques seulement) ; écran « الأقسام » avec deux onglets : المتاجر | المنتجات */
+(function(){
+const T={ttl:{ar:'الأقسام',fr:'Catégories',am:'Catégories'},sh:{ar:'المتاجر',fr:'Boutiques',am:'Boutiques'},pr:{ar:'المنتجات',fr:'Produits',am:'Produits'}};
+const t=k=>T[k][S.lang]||T[k].ar;
+const st=document.createElement('style');st.textContent='#rb66>div:first-child{display:none}.tb67{display:flex;margin:14px 20px 0;border:1px solid var(--br);background:#fff}.tb67 b{flex:1;text-align:center;padding:12px 0;font-size:15px;font-weight:700;color:var(--t);cursor:pointer}.tb67 b.on{background:var(--b);color:#fff}';document.head.appendChild(st);
+const P='<div style="padding:16px 18px 6px';
+const _d=dp;dp=function(){let h=_d.apply(this,arguments);const ix=[];let i=-1;while((i=h.indexOf(P,i+1))>=0)ix.push(i);if(ix.length<4)return h;
+const rows=`<button class="mi" onclick="S.ct67='s';mn('cats')"><i class="e65">🏪</i>${t('sh')}</button><button class="mi" onclick="S.ct67='r';mn('cats')"><i class="e65">🗂️</i>${t('pr')}</button>`;
+return h.slice(0,ix[1])+`${P};font-size:13px;font-weight:700;color:var(--t)">${t('ttl')}</div>`+rows+h.slice(ix[3])};
+window.ct67=function(k){S.ct67=k;render()};
+const _r=render;render=function(){_r();try{if(S.scr!='cats')return;const sc=document.getElementById('scr'),w=sc&&sc.querySelector('.fade');if(!w||document.getElementById('tb67'))return;const k=S.ct67=='r'?'r':'s';const top=w.querySelector('.top'),rb=document.getElementById('rb66');let grid=null;[...w.children].forEach(c=>{if(c!==top&&c!==rb&&!c.id&&!grid)grid=c});
+if(grid)grid.style.display=k=='s'?'':'none';if(rb)rb.style.display=k=='r'?'':'none';
+const d=document.createElement('div');d.id='tb67';d.className='tb67';d.innerHTML=`<b class="${k=='s'?'on':''}" onclick="ct67('s')">${t('sh')}</b><b class="${k=='r'?'on':''}" onclick="ct67('r')">${t('pr')}</b>`;if(top)top.after(d)}catch(e){}};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
