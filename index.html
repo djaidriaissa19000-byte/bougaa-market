@@ -1825,6 +1825,15 @@ if(S.role=='merchant')leaf(/^تتم مراجعة إعلانك/).forEach(e=>e.rem
 const _r=render;render=function(){_r();try{clean()}catch(e){}};
 if(typeof renderNav=='function'){const _n=renderNav;renderNav=function(){_n.apply(this,arguments);try{clean()}catch(e){}}}
 })();
+/* add65: menu façon Ouedkniss — icônes colorées, lignes plus grandes, texte sombre */
+(function(){
+const st=document.createElement('style');st.textContent='#dp .mi{height:54px;font-size:16px;font-weight:600;color:#1a1a1a;border-bottom:0}#dp .mi i{background:none;width:36px;height:36px;border-radius:0}#dp .mi i svg{stroke:#1a1a1a}#dp .mi i.e65{font-style:normal;font-size:26px;line-height:1}';document.head.appendChild(st);
+const E={rest:'🍽️',veg:'🥦',groc:'🧺',cloth:'👕',phone:'📱',truck:'🚚',serv:'🛠️'};
+const _d=dp;dp=function(){let h=_d.apply(this,arguments);
+h=h.replace(/(<button class="mi" onclick="mn\('cat:(\w+)'\)">)<i>[\s\S]*?<\/i>/g,(m,a,k)=>a+'<i class="e65">'+(E[k]||'📦')+'</i>');
+h=h.replace(/(<button class="mi" onclick="mn\('cats'\)">)<i>[\s\S]*?<\/i>/,'$1<i class="e65">🏪</i>');
+return h};
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
