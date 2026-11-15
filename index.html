@@ -1867,6 +1867,22 @@ const _r=render;render=function(){_r();try{if(S.scr!='cats')return;const sc=docu
 if(grid)grid.style.display=k=='s'?'':'none';if(rb)rb.style.display=k=='r'?'':'none';
 const d=document.createElement('div');d.id='tb67';d.className='tb67';d.innerHTML=`<b class="${k=='s'?'on':''}" onclick="ct67('s')">${t('sh')}</b><b class="${k=='r'?'on':''}" onclick="ct67('r')">${t('pr')}</b>`;if(top)top.after(d)}catch(e){}};
 })();
+/* add68: vraie connexion Google / Facebook via Supabase (OAuth) — remplace les boutons de démonstration ; réservé aux comptes clients */
+(function(){
+const RU='https://djaidriaissa19000-byte.github.io/bougaa-market/';
+const M={nc:{ar:'الدخول عبر Google أو Facebook متاح للزبائن فقط',fr:'La connexion Google/Facebook est réservée aux clients',am:'La connexion Google/Facebook est réservée aux clients'},ok:{ar:'تم تسجيل الدخول ✓',fr:'Connexion réussie ✓',am:'Connexion réussie ✓'},ko:{ar:'تعذّر تسجيل الدخول',fr:'Connexion impossible',am:'Connexion impossible'},bl:{ar:'هذا الحساب محظور',fr:'Ce compte est bloqué',am:'Ce compte est bloqué'}};
+const t=k=>M[k][S.lang]||M[k].ar;
+const _s=social;social=function(n){const p={Google:'google',Facebook:'facebook'}[n];if(!p||!API.on())return _s(n);
+if(S.role&&S.role!='client'){toast(t('nc'));return}
+location.href=API.url()+'/auth/v1/authorize?provider='+p+'&redirect_to='+encodeURIComponent(RU)};
+const h=location.hash||'';
+if(API.on()&&/[#&](access_token|error)=/.test(h)){const q=new URLSearchParams(h.replace(/^#/,''));const at=q.get('access_token'),rt=q.get('refresh_token'),er=q.get('error_description')||q.get('error');
+try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+(async()=>{if(!at){toast(er?decodeURIComponent(String(er).replace(/\+/g,' ')):t('ko'));return}
+try{const u=await fetch(API.url()+'/auth/v1/user',{headers:{apikey:API.key(),Authorization:'Bearer '+at}}).then(r=>r.json());if(!u||!u.id)throw new Error('user');
+saveSes({access:at,refresh:rt,uid:u.id,email:u.email||''});await afterLogin();const m=S.me;if(!m){saveSes(null);toast(t('ko'));return}if(m.blocked){saveSes(null);toast(t('bl'));return}
+const to={client:'home',merchant:'merchant',driver:'driver',admin:'admin'}[m.role]||'home';go(to,{role:m.role||'client',guest:0});toast(t('ok'))}catch(e){saveSes(null);toast(t('ko'))}})()}
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
