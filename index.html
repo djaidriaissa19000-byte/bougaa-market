@@ -1612,7 +1612,7 @@ const _r=render;render=function(){_r();try{fix()}catch(e){}};
 })();
 /* add50: annonces d'occasion — jusqu'à 10 photos (galerie + envoi vers Storage) */
 (function(){
-const MAX=10,G=[];let busy=0;
+const MAX=10,G=[];let busy=0;window.GAL=G;
 const TR={lab:{ar:'صور الغرض (حتى 10)',fr:"Photos de l'objet (jusqu'à 10)",am:'Tugniwin (armi 10)'},add:{ar:'أضف صورة',fr:'Ajouter',am:'Rnu'},max:{ar:'الحد الأقصى 10 صور',fr:'10 photos maximum',am:'10 n tugniwin kan'},up:{ar:'جارٍ رفع الصور…',fr:'Envoi des photos…',am:'Tuzna n tugniwin…'},ph:{fr:'Ex. : réfrigérateur Samsung',am:'Amedya: tasmeḍt Samsung'}};
 const tr=k=>(TR[k][S.lang]||TR[k].ar);
 function tiles(){return G.map((u,i)=>`<div style="position:relative;aspect-ratio:1;background:#EAF2FF url(${u}) center/cover no-repeat;border:1px solid var(--br)">${i==0?'<span style="position:absolute;bottom:0;inset-inline:0;background:rgba(8,58,140,.8);color:#fff;font-size:10px;text-align:center">1</span>':''}<span onclick="galDel(${i})" style="position:absolute;top:2px;inset-inline-end:2px;width:22px;height:22px;background:#fff;color:#B42318;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;line-height:1">×</span></div>`).join('')+(G.length<MAX?`<div onclick="$('#gif').click()" style="aspect-ratio:1;border:2px dashed var(--s);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--b);font-weight:700;font-size:11px;cursor:pointer">${ic('cam',24,'#0B4FB8')}<span>${tr('add')}</span></div>`:'')}
@@ -1639,6 +1639,14 @@ const _a=V.ad;V.ad=function(){let h=_a();const a=[].concat(S.aprov||[],S.ads||[]
 const T={ar:'أضف صور الغرض',fr:"Ajouter des photos de l'objet",am:'Rnu tugniwin'};
 const st=document.createElement('style');st.textContent='#gal>div[onclick*="gif"]{display:none!important}#gal{margin-top:8px}#gal:not(:has(div[style*="url("])){margin-top:0}';document.head.appendChild(st);
 const _s=V.sell;V.sell=function(){const h=_s();const k=h.indexOf('<div id="gal"');if(k<0)return h;return h.slice(0,k)+`<div onclick="$('#gif').click()" style="height:110px;border:2px dashed var(--s);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--b);font-weight:700;cursor:pointer">${ic('cam',32,'#0B4FB8')}<span>${T[S.lang]||T.ar}</span></div>`+h.slice(k)};
+})();
+/* add52: bouton pour pivoter une photo de l'annonce (quart de tour) */
+(function(){
+function deco(){const g=document.getElementById('gal');if(!g||!window.GAL)return;[...g.children].forEach((d,i)=>{if(i>=GAL.length||d.querySelector('.rt'))return;d.insertAdjacentHTML('beforeend',`<span class="rt" onclick="galRot(${i})" title="↻" style="position:absolute;bottom:2px;inset-inline-end:2px;width:24px;height:24px;background:#fff;color:#0B4FB8;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;line-height:1">↻</span>`)})}
+window.galRot=function(i){const src=window.GAL&&GAL[i];if(!src)return;const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.height;c.height=im.width;const x=c.getContext('2d');x.translate(c.width,0);x.rotate(Math.PI/2);x.drawImage(im,0,0);GAL[i]=c.toDataURL('image/jpeg',.9);const g=document.getElementById('gal');const d=g&&g.children[i];if(d)d.style.backgroundImage='url('+GAL[i]+')'};im.src=src};
+const _p=window.galPick;window.galPick=async function(f){await _p(f);deco()};
+const _d=window.galDel;window.galDel=function(i){_d(i);deco()};
+const _r=render;render=function(){_r();if(S.scr=='sell')deco()};
 })();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
