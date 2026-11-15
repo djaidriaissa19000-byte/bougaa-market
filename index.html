@@ -1601,6 +1601,8 @@ const _r=render;render=function(){_r();try{fix()}catch(e){}};
 const PW={'ضعيفة':['Faible','Yeḍɛef'],'متوسطة':['Moyen','Alemmas'],'قوية':['Fort','Yeǧhed']};
 document.addEventListener('input',e=>{const t=e.target;if(t.id!='rw'&&t.id!='fn1')return;if(S.lang=='ar')return;const m=document.getElementById('pwm');if(!m)return;const sp=m.querySelector('span:last-child');const k=sp&&PW[sp.textContent.trim()];if(k)sp.textContent=k[S.lang=='fr'?0:1]});
 })();
+/* add48: champs remplis automatiquement par le navigateur — même fond blanc que la case */
+(function(){const st=document.createElement('style');st.textContent='input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus,input:-webkit-autofill:active{-webkit-box-shadow:0 0 0 100px #fff inset!important;box-shadow:0 0 0 100px #fff inset!important;-webkit-text-fill-color:#083A8C!important;caret-color:#083A8C;transition:background-color 99999s}input:autofill{box-shadow:0 0 0 100px #fff inset!important}';document.head.appendChild(st)})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
