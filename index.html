@@ -1594,6 +1594,13 @@ function bad(a){if(/openIdeas\(/.test(a))return true;const c=a.match(/openChat\(
 function prune(){if(!window.SIMPLE||S.role=='admin'||H.has(S.scr))return;document.querySelectorAll('[onclick]').forEach(e=>{if(bad(e.getAttribute('onclick')||'')){const p=e.parentElement;e.remove();if(p&&p.id!='scr'&&!p.children.length&&!p.textContent.trim())p.remove()}})}
 const _r=render;render=function(){_r();try{prune()}catch(e){}};
 })();
+/* add47: suppression de la case « je ne suis pas un robot » + force du mot de passe traduite */
+(function(){
+function fix(){const b=document.getElementById('rb');if(b){b.checked=true;const l=b.closest('label');if(l)l.style.display='none'}}
+const _r=render;render=function(){_r();try{fix()}catch(e){}};
+const PW={'ضعيفة':['Faible','Yeḍɛef'],'متوسطة':['Moyen','Alemmas'],'قوية':['Fort','Yeǧhed']};
+document.addEventListener('input',e=>{const t=e.target;if(t.id!='rw'&&t.id!='fn1')return;if(S.lang=='ar')return;const m=document.getElementById('pwm');if(!m)return;const sp=m.querySelector('span:last-child');const k=sp&&PW[sp.textContent.trim()];if(k)sp.textContent=k[S.lang=='fr'?0:1]});
+})();
 if(API.on()&&API.ses){loadMe().then(()=>afterLogin()).then(()=>render()).catch(()=>{})}
 
 /* حفظ تلقائي */
