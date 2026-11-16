@@ -1962,6 +1962,9 @@ const _rd=render;render=function(){_rd();try{paint();pull()}catch(e){}};
 
 /* add49: pas de carte réclamations sous le bouton du livreur (reste dans son compte) */
 (function(){const _rd=render;render=function(){_rd();try{if(S.scr=='driver'){const e=document.getElementById('cmp33');if(e)e.remove()}}catch(e){}}})();
+/* splashBig: image d accueil plus spacieuse */
+;(function(){var _r=render;render=function(){_r.apply(this,arguments);try{var sp=document.querySelector('.sp');if(!sp)return;var sl=sp.querySelector('.sl');if(!sl)return;var im=sl.querySelector('img'),bt=sl.nextElementSibling;sp.style.position='relative';sl.style.cssText='position:absolute;left:0;right:0;bottom:0;top:36%;width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 22%);mask-image:linear-gradient(to bottom,transparent 0,#000 22%)';if(im)im.style.cssText='width:100%;height:100%;object-fit:cover;object-position:center bottom;display:block';if(bt)bt.style.cssText='padding:18px 28px 28px;width:100%;margin-top:auto;position:relative;z-index:2'}catch(e){}}})();
+
 render();
 </script>
 <script>(function(){function fx(){document.querySelectorAll('img').forEach(function(i){var k=i.getAttribute('src');if(k&&window.IMG&&IMG[k]&&i.src!==IMG[k])i.setAttribute('src',IMG[k])})}new MutationObserver(fx).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['src']});fx()})()</script>
