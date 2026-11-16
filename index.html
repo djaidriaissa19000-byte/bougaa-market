@@ -1309,6 +1309,9 @@ const RAW=`،|,|,
 بئر العرش|Bir El Arch|Bir Lɛarc
 قنزات|Guenzet|Qenzat
 بني ورثيلان|Beni Ouartilane|Ayt Wertilan
+اضغط لإضافة صورتك الشخصية|Appuyez pour ajouter votre photo|Sit i wakken ad ternuḍ tawlaft-ik
+تم حفظ صورتك ✓|Photo enregistrée ✓|Tawlaft tettwasekles ✓
+تعذّر حفظ الصورة، حاول مرة أخرى|Impossible d’enregistrer la photo, réessayez|Ur izmir ara ad tettwasekles, ɛreḍ tikkelt-nniḍen
 يجب أن يكون عمرك 18 سنة فما فوق — لا يُقبل القاصرون|Vous devez avoir 18 ans ou plus — les mineurs ne sont pas acceptés|Ilaq ad tesɛuḍ 18 n yiseggasen neɣ ugar — ur ttwaqbalen ara imecṭuḥen
 أدخل تاريخ ميلادك|Entrez votre date de naissance|Sekcem azemz n tlalit-ik
 تاريخ ميلاد صاحب المتجر|Date de naissance du propriétaire|Azemz n tlalit n bab n tḥanut
@@ -1937,6 +1940,23 @@ const _rd=render;render=function(){_rd();try{fix()}catch(e){}};
 const _ri=regI;regI=function(){if(!chk('bd'))return;const v=document.getElementById('bd').value;const r=_ri.apply(this,arguments);Promise.resolve(r).then(()=>{S.prof=Object.assign(S.prof||{},{bd:v});saveBd(v)}).catch(()=>{});return r};
 const _se=saveEdit;saveEdit=function(){if(!chk('e6'))return;const v=document.getElementById('e6').value;S.prof=Object.assign(S.prof||{},{bd:v});saveBd(v);return _se.apply(this,arguments)};
 const _rf=regMF;regMF=function(){if(!chk('sbd'))return;const v=document.getElementById('sbd').value;S.sbd=v;const r=_rf.apply(this,arguments);Promise.resolve(r).then(()=>saveBd(v)).catch(()=>{});return r};
+})();
+
+/* add48: photo personnelle (profil) */
+(function(){
+const BK='listing-photos';
+function sq(f){return new Promise((ok,ko)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const s=Math.min(i.width,i.height),c=document.createElement('canvas');c.width=c.height=320;c.getContext('2d').drawImage(i,(i.width-s)/2,(i.height-s)/2,s,s,0,0,320,320);URL.revokeObjectURL(u);c.toBlob(b=>b?ok(b):ko(new Error('x')),'image/jpeg',.85)};i.onerror=()=>ko(new Error('x'));i.src=u})}
+function rd(b){return new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(b)})}
+function dress(c,ph){c.innerHTML='';c.style.backgroundImage='url("'+ph+'")';c.style.backgroundSize='cover';c.style.backgroundPosition='center'}
+function paint(){const ph=S.prof&&S.prof.photo;
+if(S.scr=='edit'){const c=[...document.querySelectorAll('#scr div')].find(d=>d.style.width=='84px'&&d.style.borderRadius=='50%');if(c){if(ph){dress(c,ph);c.style.border='2px solid #0B4FB8'}c.style.cursor='pointer';c.onclick=pick;if(!document.getElementById('avh')&&c.parentElement)c.parentElement.insertAdjacentHTML('afterend','<div id="avh" style="text-align:center;font-size:12.5px;color:var(--t);margin:-6px 0 4px">اضغط لإضافة صورتك الشخصية</div>')}}
+if(ph&&(S.scr=='account'||S.scr=='dracc')){const c=[...document.querySelectorAll('#scr span')].find(s=>s.style.width=='56px'&&s.style.borderRadius=='50%');if(c)dress(c,ph)}}
+function pick(){const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=()=>{if(i.files&&i.files[0])setPhoto(i.files[0])};i.click()}
+async function setPhoto(f){try{const b=await sq(f);const d=await rd(b);S.prof=Object.assign(S.prof||{},{photo:d});try{saveState()}catch(e){}paint();
+if(API.on()&&API.ses){const path=API.ses.uid+'/avatar-'+Date.now().toString(36)+'.jpg';const r=await fetch(API.url()+'/storage/v1/object/'+BK+'/'+path,{method:'POST',headers:{apikey:API.key(),Authorization:'Bearer '+API.ses.access,'Content-Type':'image/jpeg'},body:b});if(!r.ok)throw new Error('up '+r.status);const url=API.url()+'/storage/v1/object/public/'+BK+'/'+path;const u=await fetch(API.url()+'/auth/v1/user',{method:'PUT',headers:{apikey:API.key(),Authorization:'Bearer '+API.ses.access,'Content-Type':'application/json'},body:JSON.stringify({data:{avatar_url:url}})});if(!u.ok)throw new Error('meta '+u.status);S.prof.photo=url;try{saveState()}catch(e){}}
+toast('تم حفظ صورتك ✓')}catch(e){toast('تعذّر حفظ الصورة، حاول مرة أخرى')}}
+async function pull(){if(!(API.on()&&API.ses))return;if(S._av48===API.ses.uid)return;S._av48=API.ses.uid;try{const r=await fetch(API.url()+'/auth/v1/user',{headers:{apikey:API.key(),Authorization:'Bearer '+API.ses.access}});if(!r.ok)return;const j=await r.json(),a=j.user_metadata&&j.user_metadata.avatar_url;if(a){S.prof=Object.assign(S.prof||{},{photo:a});paint()}else if(S.prof&&/^https?:/.test(S.prof.photo||'')){delete S.prof.photo}}catch(e){}}
+const _rd=render;render=function(){_rd();try{paint();pull()}catch(e){}};
 })();
 
 render();
