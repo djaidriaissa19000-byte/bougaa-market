@@ -1960,6 +1960,8 @@ async function pull(){if(!(API.on()&&API.ses))return;if(S._av48===API.ses.uid)re
 const _rd=render;render=function(){_rd();try{paint();pull()}catch(e){}};
 })();
 
+/* add49: pas de carte réclamations sous le bouton du livreur (reste dans son compte) */
+(function(){const _rd=render;render=function(){_rd();try{if(S.scr=='driver'){const e=document.getElementById('cmp33');if(e)e.remove()}}catch(e){}}})();
 render();
 </script>
 <script>(function(){function fx(){document.querySelectorAll('img').forEach(function(i){var k=i.getAttribute('src');if(k&&window.IMG&&IMG[k]&&i.src!==IMG[k])i.setAttribute('src',IMG[k])})}new MutationObserver(fx).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['src']});fx()})()</script>
