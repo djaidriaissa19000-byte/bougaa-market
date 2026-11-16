@@ -1309,6 +1309,9 @@ const RAW=`،|,|,
 بئر العرش|Bir El Arch|Bir Lɛarc
 قنزات|Guenzet|Qenzat
 بني ورثيلان|Beni Ouartilane|Ayt Wertilan
+يجب أن يكون عمرك 18 سنة فما فوق — لا يُقبل القاصرون|Vous devez avoir 18 ans ou plus — les mineurs ne sont pas acceptés|Ilaq ad tesɛuḍ 18 n yiseggasen neɣ ugar — ur ttwaqbalen ara imecṭuḥen
+أدخل تاريخ ميلادك|Entrez votre date de naissance|Sekcem azemz n tlalit-ik
+تاريخ ميلاد صاحب المتجر|Date de naissance du propriétaire|Azemz n tlalit n bab n tḥanut
 عين الروى|Ain Roua|Ain Roua
 بني حسين|Beni Hocine|Beni Hocine
 حمام قرقور|Hammam Guergour|Hammam Guergour
@@ -1915,6 +1918,26 @@ const _rd2=render;render=function(){_rd2();saveState()};
 V.dracc=()=>{const p=S.prof||{},m=S.me||{},nm=((p.fn?p.fn+' '+(p.ln||''):'')||m.first_name||'موصل').trim();const G=[['نشاطي',[['coin','أرباحي','earn'],['help','الشكاوي والتبليغات','cmp']]],['حسابي',[['user','بياناتي','edit'],['gear','الإعدادات','set']]],['المزيد',[['help','المساعدة','help'],['doc','الشروط والخصوصية','legal']]]];return topbar('حسابي','driver')+`<div style="padding:16px 20px;display:flex;flex-direction:column;gap:8px"><div class="card row" style="padding:16px"><span style="width:56px;height:56px;border-radius:50%;background:var(--b);display:flex;align-items:center;justify-content:center">${ic('truck',30,'#fff')}</span><div><b style="font-size:17px">${esc(nm)}</b><div style="color:var(--t);font-size:13px">موصل الطلبات · ${S.drvOn?'في الخدمة':'خارج الخدمة'}</div></div></div>${G.map(([h,it])=>`<div style="font-size:13px;font-weight:900;color:var(--t);margin:8px 4px 0">${h}</div>`+it.map(([k,l,a])=>`<button class="card row" style="padding:12px 16px;justify-content:space-between;font:inherit;font-weight:700;color:var(--n)" onclick="${a=='earn'||a=='cmp'?"S.hb='driver';":''}go('${a}'${a=='legal'?",{lt:0,lback:'account'}":''})"><span class="row" style="gap:12px"><i style="width:34px;height:34px;border-radius:50%;background:#EAF2FF;display:flex;align-items:center;justify-content:center">${ic(k,18,'#0B4FB8')}</i>${l}</span><span style="transform:scaleX(-1);display:flex">${ic('back',20,'#0B4FB8')}</span></button>`).join('')).join('')}<button class="btn o" style="margin-top:10px" onclick="if(S.job){toast('أنهِ الطلب الحالي أولا');return}S.drvOn=false;S.req=null;S.hb='';logout()">تسجيل الخروج</button></div>`};
 const _ac46=V.account;V.account=()=>S.role=='driver'?V.dracc():_ac46();
 const _dv46=V.driver;V.driver=()=>_dv46().replace('<div style="position:absolute;top:12px;inset-inline-start:12px;inset-inline-end:12px;display:flex;justify-content:space-between','<div style="z-index:1200;position:absolute;top:12px;inset-inline-start:12px;inset-inline-end:12px;display:flex;justify-content:space-between').replace(/(<button class="ib"[^>]*onclick="drvLogout\(\)">[\s\S]*?<\/button>)/,'$1<button class="ib" style="background:#fff;box-shadow:0 2px 8px rgba(8,58,140,.25);margin-inline-start:8px" onclick="S.hb=\'driver\';go(\'account\')">'+ic('user',22,'#0B4FB8')+'</button>');
+
+/* add47: prénom puis nom (en colonne) + date de naissance obligatoire, 18 ans minimum */
+(function(){
+const AGE_MSG='يجب أن يكون عمرك 18 سنة فما فوق — لا يُقبل القاصرون';
+const p2=n=>String(n).padStart(2,'0');
+function maxBd(){const d=new Date();d.setFullYear(d.getFullYear()-18);return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())}
+function chk(id){const e=document.getElementById(id),v=e&&e.value;if(!v){toast('أدخل تاريخ ميلادك');return false}if(v>maxBd()||v<'1900-01-01'){toast(AGE_MSG);return false}return true}
+function saveBd(v){try{if(API.on()&&API.ses)req('/rest/v1/profiles?id=eq.'+API.ses.uid,{m:'PATCH',h:{Prefer:'return=minimal'},b:{birth_date:v}}).catch(()=>{})}catch(e){}}
+function fix(){
+[['e1','e2'],['fn','ln'],['dfn','dln']].forEach(([a,b])=>{const A=document.getElementById(a),B=document.getElementById(b);if(!A||!B)return;let n=A;while(n&&!n.contains(B))n=n.parentElement;if(n&&n.classList&&n.classList.contains('row')){n.style.flexDirection='column';n.style.alignItems='stretch';n.style.gap='0';[...n.children].forEach(c=>{c.style.flex='none';c.style.width='100%'})}});
+const mx=maxBd();
+if(S.scr=='edit'&&!document.getElementById('e6')){const e2=document.getElementById('e2');if(e2){let row=e2;while(row&&!(row.classList&&row.classList.contains('row')))row=row.parentElement;if(row){const v=(S.prof&&S.prof.bd)||(S.me&&S.me.birth_date)||'';row.insertAdjacentHTML('afterend','<label>تاريخ الميلاد <b style="color:#D21034">*</b></label><input id="e6" type="date" value="'+v+'">')}}}
+if(S.scr=='regi'){const bd=document.getElementById('bd');if(bd){const l=bd.previousElementSibling;if(l&&l.tagName=='LABEL'&&!l.querySelector('b'))l.insertAdjacentHTML('beforeend',' <b style="color:#D21034">*</b>')}}
+if(S.scr=='regm'&&!document.getElementById('sbd')){const so=document.getElementById('so');if(so){let f=so;while(f.parentElement&&![...f.parentElement.children].some(c=>c.tagName=='LABEL'))f=f.parentElement;f.insertAdjacentHTML('afterend','<label>تاريخ ميلاد صاحب المتجر <b style="color:#D21034">*</b></label><input id="sbd" type="date" value="'+(S.sbd||'')+'">')}}
+['bd','dbd','e6','sbd'].forEach(i=>{const e=document.getElementById(i);if(e&&e.type=='date'){e.max=mx;e.min='1900-01-01'}})}
+const _rd=render;render=function(){_rd();try{fix()}catch(e){}};
+const _ri=regI;regI=function(){if(!chk('bd'))return;const v=document.getElementById('bd').value;const r=_ri.apply(this,arguments);Promise.resolve(r).then(()=>{S.prof=Object.assign(S.prof||{},{bd:v});saveBd(v)}).catch(()=>{});return r};
+const _se=saveEdit;saveEdit=function(){if(!chk('e6'))return;const v=document.getElementById('e6').value;S.prof=Object.assign(S.prof||{},{bd:v});saveBd(v);return _se.apply(this,arguments)};
+const _rf=regMF;regMF=function(){if(!chk('sbd'))return;const v=document.getElementById('sbd').value;S.sbd=v;const r=_rf.apply(this,arguments);Promise.resolve(r).then(()=>saveBd(v)).catch(()=>{});return r};
+})();
 
 render();
 </script>
